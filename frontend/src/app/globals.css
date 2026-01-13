@@ -1,0 +1,643 @@
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+.post-card {
+  border-radius: 18px; /* Bo góc mềm mại, lớn hơn */
+  overflow: hidden; /* Đảm bảo nội dung không tràn ra ngoài các góc bo */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08); /* Đổ bóng nhẹ và sâu hơn */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Hiệu ứng mượt mà khi di chuột */
+  max-width: 650px; /* Giới hạn chiều rộng tối đa của bài đăng */
+  width: 100%; /* Đảm bảo đáp ứng */
+}
+
+.post-card:hover {
+  transform: translateY(-7px); /* Nổi lên một chút khi di chuột */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12); /* Đổ bóng mạnh hơn khi hover */
+}
+
+/* Header của bài đăng */
+.post-header {
+  padding: 15px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eee; /* Đường kẻ phân tách nhẹ */
+}
+
+.user-avatar {
+  width: 55px; /* Kích thước avatar lớn hơn */
+  height: 55px;
+  border: 3px solid #0d6efd; /* Viền xanh Bootstrap primary */
+  padding: 2px; /* Khoảng cách giữa ảnh và viền */
+}
+
+.username {
+  font-weight: 600; /* Tên người dùng đậm hơn */
+  color: #333;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+}
+
+.post-time {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* Khu vực nội dung media (hình ảnh/video) */
+.post-media {
+  width: 100%;
+  max-height: 550px; /* Giới hạn chiều cao để không quá dài */
+  object-fit: cover; /* Cắt ảnh/video để vừa khung mà không bị méo */
+  display: block; /* Loại bỏ khoảng trắng dưới ảnh */
+}
+
+/* Khu vực caption */
+.post-caption {
+  padding: 15px;
+  background-color: #ffffff;
+  line-height: 1.6; /* Tăng khoảng cách dòng cho dễ đọc */
+}
+
+.caption-text {
+  color: #444;
+  margin-bottom: 0;
+}
+
+.caption-username {
+  font-weight: 600;
+  color: #333;
+  margin-right: 5px;
+}
+
+/* Footer tương tác (like, comment, share) */
+.post-footer {
+  padding: 15px;
+  background-color: #ffffff;
+  border-top: 1px solid #eee; /* Đường kẻ phân tách nhẹ */
+}
+
+.interaction-stats {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.interaction-buttons .btn {
+  color: #666; /* Màu chữ nút mặc định */
+  font-weight: 500;
+  border-radius: 25px; /* Bo tròn hoàn toàn nút */
+  padding: 8px 20px;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Khoảng cách giữa icon và text */
+}
+
+.interaction-buttons .btn:hover {
+  background-color: #e9ecef; /* Nền xám nhạt khi hover */
+  color: #333; /* Chữ đậm hơn khi hover */
+  transform: translateY(-2px); /* Hiệu ứng nhấn nhẹ */
+}
+
+.interaction-buttons .btn i {
+  font-size: 1.25rem; /* Kích thước icon lớn hơn */
+}
+
+/* Custom cho icon Like khi đã được thích */
+.btn-like.liked {
+  color: #dc3545; /* Màu đỏ cho nút like khi đã được nhấn */
+}
+.btn-like.liked:hover {
+  background-color: #f8d7da; /* Nền đỏ nhạt khi hover */
+  color: #dc3545;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .post-card {
+    margin: 0 10px; /* Thêm khoảng cách hai bên trên mobile */
+  }
+  .interaction-buttons .btn {
+    padding: 8px 10px; /* Giảm padding nút trên mobile */
+    font-size: 0.9rem;
+  }
+}
+
+.profile-container {
+  max-width: 760px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  margin: 0 auto;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #f0f0f0; /* Viền avatar nhẹ nhàng */
+  margin-bottom: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.profile-username {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.profile-handle {
+  font-size: 1.1rem;
+  color: #777;
+  margin-bottom: 15px;
+}
+
+/* Các chỉ số (Followers, Following, Likes) */
+.profile-stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Nút Profile */
+.profile-actions .btn {
+  width: 150px;
+  border-radius: 25px;
+  font-weight: 600;
+  padding: 10px 15px;
+  margin: 0 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+.profile-actions .btn-primary {
+  background-color: #fe2c55; /* Màu đỏ đặc trưng của TikTok */
+  border-color: #fe2c55;
+}
+
+.profile-actions .btn-primary:hover {
+  background-color: #e02b4d;
+  border-color: #e02b4d;
+  transform: translateY(-2px);
+}
+
+.profile-actions .btn-outline-secondary {
+  color: #333;
+  border-color: #ccc;
+}
+
+.profile-actions .btn-outline-secondary:hover {
+  background-color: #f0f0f0;
+  border-color: #bbb;
+  transform: translateY(-2px);
+}
+
+/* Mô tả Profile */
+.profile-bio {
+  text-align: center;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Thanh điều hướng Tabs */
+.nav-tabs {
+  border-bottom: 1px solid #eee;
+  justify-content: center; /* Căn giữa các tab */
+  margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+  color: #777;
+  font-weight: 500;
+  padding: 12px 25px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #333;
+  border-bottom-color: #ccc;
+}
+
+.nav-tabs .nav-link.active {
+  color: #333;
+  border-bottom-color: #000; /* Gạch chân đậm khi active */
+  background-color: transparent;
+  font-weight: 600;
+}
+
+/* Lưới video/hình ảnh */
+.video-grid .col {
+  padding: 5px; /* Giảm padding giữa các ảnh */
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 250px; /* Chiều cao cố định cho thumbnail */
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.video-thumbnail:hover {
+  transform: scale(1.03); /* Phóng to nhẹ khi hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .profile-container {
+    padding: 15px;
+    margin: 0 10px;
+  }
+  .profile-username {
+    font-size: 1.5rem;
+  }
+  .profile-handle {
+    font-size: 1rem;
+  }
+  .profile-stats {
+    gap: 20px;
+  }
+  .profile-actions .btn {
+    width: 120px;
+    font-size: 0.9rem;
+    margin: 0 5px;
+  }
+  .nav-tabs .nav-link {
+    padding: 10px 15px;
+  }
+  .video-thumbnail {
+    height: 180px; /* Giảm chiều cao thumbnail trên mobile */
+  }
+}
+
+.hero-section {
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  padding: 8rem 0;
+  border-bottom-left-radius: 50% 15%;
+  border-bottom-right-radius: 50% 15%;
+  margin-bottom: 5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  animation: fadeInDown 1s ease-out;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  margin-bottom: 2.5rem;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0.95;
+  animation: fadeInUp 1s ease-out;
+}
+
+@media (min-width: 768px) {
+  .hero-section h1 {
+    font-size: 4.2rem;
+  }
+  .hero-section p {
+    font-size: 1.5rem;
+  }
+}
+
+.section-title {
+  color: #2d3748;
+  font-weight: 700;
+  font-size: 2.3rem;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  margin: 0.5rem auto 0;
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  border-radius: 2px;
+}
+
+.card {
+  border: none;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  background-color: #ffffff;
+}
+
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.15);
+}
+
+.icon-circle {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, #764ba2, #667eea);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(118, 75, 162, 0.4);
+}
+
+.card:hover .icon-circle {
+  transform: rotate(10deg) scale(1.1);
+  box-shadow: 0 10px 20px rgba(118, 75, 162, 0.6);
+}
+
+.btn-custom {
+  background-color: #f97316;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  border: none;
+}
+
+.btn-custom:hover {
+  background-color: #ea580c;
+  transform: translateY(-2px);
+}
+
+.btn-custom:active {
+  transform: scale(0.97);
+  box-shadow: 0 4px 12px rgba(255, 105, 0, 0.3);
+}
+
+/* Hiệu ứng fadeIn cho Hero text */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.otp-container {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 450px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.otp-container h2 {
+  color: #1a73e8;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+.otp-container p {
+  color: #666;
+  margin-bottom: 25px;
+}
+.otp-input {
+  width: 50px;
+  height: 50px;
+  margin: 0 10px;
+  text-align: center;
+  font-size: 1.5rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  background: #f9f9f9;
+  color: red;
+}
+.otp-input:focus {
+  border-color: #1a73e8;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(26, 115, 232, 0.2);
+  outline: none;
+}
+
+
+.alert-success {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #e6f4ea;
+  color: #1a7e3b;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  animation: slideInSuccess 0.3s ease-out;
+  border-left: 4px solid #2ecc71;
+}
+
+.alert-success .icon {
+  font-size: 24px;
+  color: #2ecc71;
+}
+
+.alert-success .message {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.alert-success .close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #1a7e3b;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.alert-success .close-btn:hover {
+  opacity: 1;
+}
+
+@keyframes slideInSuccess {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.alert-failed {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #fce7e7;
+  color: #a71c1c;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  animation: slideIn 0.3s ease-out;
+  border-left: 4px solid #e74c3c;
+}
+
+.alert-failed .icon {
+  font-size: 24px;
+  color: #e74c3c;
+}
+
+.alert-failed .message {
+  flex: 1;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.alert-failed .close-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #a71c1c;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.alert-failed .close-btn:hover {
+  opacity: 1;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
+.post-card {
+  max-width: 700px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.shared-post:hover {
+  background-color: #f1f3f5;
+  transition: background-color 0.2s ease;
+}
+
+.caption-username {
+  color: #212529;
+}

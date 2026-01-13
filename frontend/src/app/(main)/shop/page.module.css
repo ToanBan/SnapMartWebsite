@@ -1,0 +1,125 @@
+
+
+
+.productContainer {
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 10rem;
+}
+
+.mainImage {
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.mainImage:hover {
+  transform: scale(1.02);
+}
+
+.imgThumbnail {
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.imgThumbnail:hover {
+  transform: scale(1.1);
+  border-color: #6c5ce7;
+}
+
+.priceHuge {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #e53935;
+}
+
+.btnAddCart {
+  background: linear-gradient(135deg, #6c5ce7, #8e44ad);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(108, 92, 231, 0.4);
+}
+
+.btnAddCart:hover {
+  background: linear-gradient(135deg, #8e44ad, #6c5ce7);
+  transform: translateY(-2px);
+}
+
+.btnBuyNow {
+  background: linear-gradient(135deg, #ff6b6b, #ff4757);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 3px 10px rgba(255, 71, 87, 0.4);
+}
+
+.btnBuyNow:hover {
+  background: linear-gradient(135deg, #ff4757, #ff6b6b);
+  transform: translateY(-2px);
+}
+
+.navTabs {
+  border-bottom: 2px solid #eee;
+}
+
+.navTabs .nav-link {
+  color: #555;
+  font-weight: 500;
+  border: none;
+  border-radius: 0;
+  transition: color 0.3s ease;
+}
+
+.navTabs .nav-link.active {
+  color: #6c5ce7;
+  border-bottom: 3px solid #6c5ce7;
+  background: transparent;
+}
+
+.navTabs .nav-link:hover {
+  color: #6c5ce7;
+}
+
+.list-group-item {
+  border: none;
+  padding-left: 0;
+  background-color: transparent;
+}
+
+.reviewBox {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+
+.commentForm input,
+.commentForm textarea {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+}
+
+.commentForm input:focus,
+.commentForm textarea:focus {
+  border-color: #6c5ce7;
+  box-shadow: 0 0 4px rgba(108, 92, 231, 0.3);
+  outline: none;
+}
+
+.commentItem {
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}

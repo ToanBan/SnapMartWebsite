@@ -1,0 +1,24 @@
+import React from 'react'
+
+const TransactionCod = async(orderId:string,) => {
+  try {
+    const res = await fetch("http://localhost:5000/api/transaction-cod", {
+        method:"POST", 
+        credentials:"include", 
+        body:JSON.stringify({orderId}), 
+        headers:{
+            "Content-Type":"application/json"
+        }
+    })
+
+    if(res.ok){
+        const data = await res.json();
+        return data;
+    }
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+export default TransactionCod
