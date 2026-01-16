@@ -167,6 +167,7 @@ const RecommendByCBF = async (req, res, next) => {
 
 const SuggestionProduct = async (req, res, next) => {
   try {
+    const userId = req.user.id
     const { productsIds } = req.body;
     const products = await Product.findAll({
       where: {
@@ -192,7 +193,8 @@ const SuggestionProduct = async (req, res, next) => {
     }
 
     return res.status(200).json({
-      message:products
+      message:products, 
+      userId
     })
   } catch (error) {
     next(error);

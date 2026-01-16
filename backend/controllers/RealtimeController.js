@@ -1,7 +1,9 @@
 const { Comment, User, Message, Business } = require("../models");
 const { Op, where } = require("sequelize");
-
+const path = require("path");
+const fs = require("fs");
 const jwt = require("jsonwebtoken");
+const message = require("../models/message");
 
 const AddComment = async (io, socket, data) => {
   try {
@@ -42,14 +44,25 @@ const AddComment = async (io, socket, data) => {
 
 const SendMessage = async (io, socket, data) => {
   try {
-    const { recieveId, content } = data;
-    const userId = socket.user.id;
+    const { recieveId, content, type } = data;
 
-    const newMessage = await Message.create({
-      senderId: userId,
-      receiverId: recieveId,
-      content,
-    });
+    const userId = socket.user.id;
+    let newMessage;
+    if (type == "file") {
+      newMessage = await Message.create({
+        senderId: userId,
+        receiverId: recieveId,
+        content,
+        fileName: content,
+        type
+      });
+    } else {
+      newMessage = await Message.create({
+        senderId: userId,
+        receiverId: recieveId,
+        content,
+      });
+    }
 
     io.to(`user-${recieveId}`).emit("receiveMessage", {
       id: newMessage.id,
@@ -57,6 +70,7 @@ const SendMessage = async (io, socket, data) => {
       receiverId: newMessage.receiverId,
       content: newMessage.content,
       createdAt: newMessage.createdAt,
+      type,
     });
 
     io.to(`user-${userId}`).emit("receiveMessage", {
@@ -65,6 +79,7 @@ const SendMessage = async (io, socket, data) => {
       receiverId: newMessage.receiverId,
       content: newMessage.content,
       createdAt: newMessage.createdAt,
+      type,
     });
   } catch (error) {
     console.error("Lỗi gửi tin nhắn:", error);
@@ -259,6 +274,39 @@ const GetMessageBusiness = async (req, res, next) => {
   }
 };
 
+const UploadFile = async (req, res, next) => {
+  try {
+    const file = req.file;
+    if (file) {
+      return res.status(200).json({
+        success: true,
+        fileName: req.file.filename,
+      });
+    } else {
+      return res.status(200).json({
+        message: "not found",
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const DownloadFile = async (req, res, next) => {
+  try {
+    const filename = req.params.filename;
+    path.join(__dirname, "../generate/encode_query.py");
+    const filePath = path.join(__dirname, "../uploads", filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: filePath });
+    }
+
+    res.download(filePath, filename);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   AddComment,
   GetCommentByPostId,
@@ -266,4 +314,6 @@ module.exports = {
   GetMessageByUserId,
   SendMessageBusiness,
   GetMessageBusiness,
+  UploadFile,
+  DownloadFile,
 };

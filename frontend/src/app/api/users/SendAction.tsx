@@ -21,7 +21,6 @@ const SendAction = async ({ actions }: { actions: any[] }) => {
           createdAt: Date.now(),
         })
       );
-     
     }
 
     return;

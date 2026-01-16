@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Send } from "lucide-react";
+import { Send, Paperclip } from "lucide-react";
 import socket from "../../lib/socket";
-
+import UploadsFile from "../api/users/UploadsFile";
 interface FriendsProps {
   following: {
     id: string;
@@ -20,6 +20,7 @@ interface MessageProps {
   receiverId: string;
   content: string;
   createdAt: string;
+  type: String;
 }
 
 const GetFriend = () => {
@@ -31,7 +32,8 @@ const GetFriend = () => {
   const imageUrl = "http://localhost:5000/uploads/";
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
-
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [fileName, setFileName] = useState("");
   const fetchFriends = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/friends", {
@@ -73,7 +75,7 @@ const GetFriend = () => {
     if (!recieveId) return;
     if (content.trim() === "") return;
 
-    const data = { recieveId, content };
+    const data = { recieveId, content, fileName };
     socket.emit("sendMessage", data);
 
     setContent("");
@@ -99,6 +101,8 @@ const GetFriend = () => {
       socket.off("receiveMessage");
     };
   }, []);
+
+  
 
   return (
     <>
@@ -189,7 +193,6 @@ const GetFriend = () => {
             ></button>
           </div>
 
-          {/* Messages */}
           <div
             className="p-3 bg-light"
             style={{ height: "260px", overflowY: "auto", fontSize: "0.9rem" }}
@@ -222,7 +225,26 @@ const GetFriend = () => {
                           : "#fff",
                     }}
                   >
-                    {msg.content}
+                    {msg.type === "file" ? (
+                      <a
+                        href={`${imageUrl}api/download/${msg.content}`}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color:
+                            msg.senderId === selectedFriend.following.id
+                              ? "#000"
+                              : "#fff",
+                          textDecoration: "underline",
+                          wordBreak: "break-all",
+                        }}
+                      >
+                        📎 {msg.content}
+                      </a>
+                    ) : (
+                      msg.content
+                    )}
                   </div>
                 </div>
               ))
@@ -230,6 +252,36 @@ const GetFriend = () => {
           </div>
 
           <div className="p-2 border-top bg-white d-flex align-items-center">
+            <button
+              className="btn btn-light rounded-circle me-1"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Paperclip size={18} />
+            </button>
+            <input
+              name="fileName"
+              type="file"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                const result = await UploadsFile(file);
+                console.log(result);
+
+                if (result?.success) {
+                  socket.emit("sendMessage", {
+                    recieveId: selectedFriend?.following.id,
+                    content: result.fileName,
+                    type: "file",
+                  });
+                }
+
+                e.target.value = "";
+              }}
+            />
+
             <input
               type="text"
               className="form-control form-control-sm rounded-pill me-2"

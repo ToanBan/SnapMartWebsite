@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, ENUM } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
     static associate(models) {
@@ -25,6 +25,15 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "user",
       },
       content: DataTypes.TEXT,
+      type: {
+        type: DataTypes.ENUM("text", "file"),
+        allowNull: false,
+        defaultValue: "text",
+      },
+      fileName: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       sequelize,

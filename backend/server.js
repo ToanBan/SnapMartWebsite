@@ -124,6 +124,8 @@ const {
   GetMessageByUserId,
   SendMessageBusiness,
   GetMessageBusiness,
+  UploadFile, 
+  DownloadFile
 } = require("./controllers/RealtimeController");
 
 const {
@@ -321,6 +323,8 @@ app.post("/api/posts/report/:id", CheckUserAuthencation, ReportPost);
 app.post("/api/admin/posts/change-status", CheckAdmin, ChangeStatusPost);
 app.get("/api/admin/errors", CheckAdmin, GetErrors);
 app.post("/api/hello", CheckUserAuthencation, SuggestionProduct)
+app.post("/api/upload-file", upload.single("fileName"), UploadFile)
+app.get("/uploads/api/download/:filename", DownloadFile)
 app.use(errorLogger);
 server.listen(5000, () => {
   console.log("Server is running on port 5000");
