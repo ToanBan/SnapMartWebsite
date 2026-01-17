@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import SettingProfile from "./SettingProfile";
 import { useUser } from "@/hooks/useUser";
-
+import SendNotification from "@/app/api/users/SendNotification";
 interface CountFollowProps {
   follower: string;
   following: string;
@@ -31,11 +31,9 @@ const ProfileHeader = ({
   const [likes, setLikes] = useState(0);
   const [statusFollow, setStatusFollow] = useState("Follow");
 
-  
-  
-
   const HandleToggleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    if (!profileId) return;
     try {
       const res = await fetch(`http://localhost:5000/api/follow/${profileId}`, {
         method: "POST",
@@ -48,11 +46,12 @@ const ProfileHeader = ({
       if (res.status === 201) {
         setStatusFollow("Unfollow");
         setFollower((prev) => (prev ? String(Number(prev) + 1) : "1"));
+        SendNotification(profileId, "FOLLOW", "Vừa Theo Dõi Bạn");
       } else {
         setStatusFollow("Follow");
         setFollower((prev) =>
           prev && Number(prev) > 0 ? String(Number(prev) - 1) : "0"
-        ); 
+        );
       }
 
       const data = await res.json();
@@ -83,11 +82,10 @@ const ProfileHeader = ({
     }
   };
 
-
-  useEffect(()=>{
-    if(!account) return;
+  useEffect(() => {
+    if (!account) return;
     localStorage.setItem("userId", account.id);
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (profileId) {
@@ -95,8 +93,12 @@ const ProfileHeader = ({
     }
   }, []);
 
+  const HandleNotification = (type: string, content: string) => {
+    if (!profileId) return;
+    SendNotification(profileId, type, content);
+  };
 
-
+  console.log("status", statusFollow);
 
   return (
     <div className="profile-header d-flex flex-column align-items-center text-center">

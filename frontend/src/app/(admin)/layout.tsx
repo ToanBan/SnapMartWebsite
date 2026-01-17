@@ -1,4 +1,5 @@
 import SidebarPage from "../components/share/Sidebar";
+import NavigationMain from "../components/share/NavigationMain";
 export default async function AdminLayout({
   children,
 }: {
@@ -7,6 +8,7 @@ export default async function AdminLayout({
   return (
     <>
       <div className="d-flex">
+        
         <SidebarPage />
         {children}
       </div>

@@ -17,7 +17,7 @@ const {
   InsertProducts,
   exportProductsJson,
   RecommendByCBF,
-  SuggestionProduct
+  SuggestionProduct,
 } = require("./controllers/SuggestionController");
 
 const io = new Server(server, {
@@ -124,8 +124,11 @@ const {
   GetMessageByUserId,
   SendMessageBusiness,
   GetMessageBusiness,
-  UploadFile, 
-  DownloadFile
+  UploadFile,
+  DownloadFile,
+  HandleNotification,
+  ReadNotification,
+  GetNotification,
 } = require("./controllers/RealtimeController");
 
 const {
@@ -159,7 +162,7 @@ const {
   ChangeStatusUsers,
   GetOrdersAdmin,
   ChangeStatusPost,
-  GetErrors
+  GetErrors,
 } = require("./controllers/AdminController");
 
 const {
@@ -216,6 +219,15 @@ io.on("connection", (socket) => {
     SendMessageBusiness(io, socket, data);
   });
 
+  socket.on("notification", (data) => {
+    console.log("notification");
+    HandleNotification(io, socket, data);
+  });
+
+  socket.on("readNotification", (data) => {
+    ReadNotification(io, socket, data);
+  });
+
   socket.on("leavePostRoom", (room) => {
     socket.leave(room);
   });
@@ -263,7 +275,7 @@ app.post(
 );
 
 app.get("/api/admin/verify-businesses", GetVerifyBusinesses);
-app.post("/api/admin/verify-business", VerifyBusiness);
+app.post("/api/admin/verify-business", CheckAdmin,VerifyBusiness);
 app.get("/api/check_teacher", CheckUserAuthencation, CheckTeacherId);
 app.post(
   "/api/business/product/add",
@@ -322,9 +334,10 @@ app.get("/api/admin/orders", CheckAdmin, GetOrdersAdmin);
 app.post("/api/posts/report/:id", CheckUserAuthencation, ReportPost);
 app.post("/api/admin/posts/change-status", CheckAdmin, ChangeStatusPost);
 app.get("/api/admin/errors", CheckAdmin, GetErrors);
-app.post("/api/hello", CheckUserAuthencation, SuggestionProduct)
-app.post("/api/upload-file", upload.single("fileName"), UploadFile)
-app.get("/uploads/api/download/:filename", DownloadFile)
+app.post("/api/hello", CheckUserAuthencation, SuggestionProduct);
+app.post("/api/upload-file", upload.single("fileName"), UploadFile);
+app.get("/uploads/api/download/:filename", DownloadFile);
+app.get("/api/notifications", CheckUserAuthencation, GetNotification);
 app.use(errorLogger);
 server.listen(5000, () => {
   console.log("Server is running on port 5000");

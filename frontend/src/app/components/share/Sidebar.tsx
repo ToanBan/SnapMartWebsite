@@ -263,7 +263,7 @@ const SidebarPage: React.FC = () => {
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
       <div className="main-wrapper">
-        {/* Header Mobile */}
+        
         <div
           className="d-md-none sticky-top bg-white shadow-sm p-3 d-flex justify-content-between align-items-center"
           style={{ zIndex: 1040 }}

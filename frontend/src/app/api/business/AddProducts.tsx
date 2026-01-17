@@ -11,8 +11,7 @@ const AddProducts = async(e:React.FormEvent<HTMLFormElement>) => {
     })
     if(res.ok){
         const data = await res.json();
-        return data
-        console.log(data);
+        return data.data
     }
   } catch (error) {
     console.error(error);

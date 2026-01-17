@@ -15,7 +15,7 @@ const VerifyProduct = async (productId: string, status: string) => {
 
     if (res.ok) {
       const data = await res.json();
-      return data.message
+      return data;
     }
   } catch (error) {
     console.error(error);

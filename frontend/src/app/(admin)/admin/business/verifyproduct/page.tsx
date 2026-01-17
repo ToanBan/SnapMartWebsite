@@ -4,7 +4,7 @@ import GetProductsPending from "@/app/api/admin/GetProductsPending";
 import VerifyProduct from "@/app/api/admin/VerifyProducts";
 import AlertSuccess from "@/app/components/share/AlertSuccess";
 import AlertError from "@/app/components/share/AlertError";
-
+import SendNotification from "@/app/api/users/SendNotification";
 interface ProductsProps {
   id: string;
   productName: string;
@@ -36,8 +36,14 @@ const VerifyProductPage = () => {
   const handleVerify = async (productId: string, status: string) => {
     try {
       const message = await VerifyProduct(productId, status);
+      console.log(message);
       if (message) {
         setSuccess(true);
+        SendNotification(
+          message.userId,
+          "ADMIN",
+          `ADMIN ĐÃ ${message.message}`
+        );
         fetchProducts();
         setTimeout(() => setSuccess(false), 3000);
       } else {

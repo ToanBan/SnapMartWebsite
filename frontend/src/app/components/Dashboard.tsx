@@ -13,15 +13,16 @@ import {
   CalendarDays,
 } from "lucide-react";
 import RevenueChart from "./share/RevenueChart";
+import Header from "./share/Header";
 const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
-  console.log(isAdmin);
-  console.log(data);
   return (
     <>
       <div
         className="container-xl py-5"
         style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}
       >
+        <Header/>
+
         <div className="dashboard-header d-flex justify-content-between align-items-end mb-4">
           <div>
             <h2 className="dashboard-title">Hệ Thống Quản Trị</h2>
@@ -219,7 +220,9 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                     <div className="icon-box bg-customers">
                       <Users size={24} color="white" strokeWidth={2.5} />
                     </div>
-                    <div className="stat-value text-danger">{data.countAllUsers}</div>
+                    <div className="stat-value text-danger">
+                      {data.countAllUsers}
+                    </div>
                     <div className="stat-label">Người Dùng</div>
                   </div>
                 </div>
@@ -231,7 +234,9 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                     <div className="icon-box bg-unsold">
                       <CalendarDays size={24} color="white" strokeWidth={2.5} />
                     </div>
-                    <div className="stat-value text-danger">{data.todayPosts}</div>
+                    <div className="stat-value text-danger">
+                      {data.todayPosts}
+                    </div>
                     <div className="stat-label">Số Lượng Bài Viết Hôm Nay</div>
                     <div className="mt-3"></div>
                   </div>

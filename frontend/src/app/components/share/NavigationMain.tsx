@@ -17,7 +17,6 @@ const NavigationMain = ({
   loginPartial: React.ReactNode;
 }) => {
   const pathName = usePathname();
-  const [messagesCount, setMessagesCount] = useState(2);
 
   useEffect(() => {
     //@ts-ignore

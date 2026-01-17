@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { MessageCircle } from "lucide-react";
-
+import useNotifications from "@/hooks/useNotifications";
 const Messages = () => {
-  const [count, setCount] = useState(2);
-  const [messagesCount, setMessagesCount] = useState(2);
-  
-
+  const notifications = useNotifications();
+  const messagesCount = notifications?.filter(
+    (n) => n.type === "MESSAGE"
+  ).length;
 
   return (
     <>
@@ -23,9 +23,6 @@ const Messages = () => {
           </span>
         )}
       </a>
-
-      
-      
     </>
   );
 };

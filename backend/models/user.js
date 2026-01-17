@@ -31,6 +31,15 @@ module.exports = (sequelize, DataTypes) => {
       });
       User.hasMany(models.CartItem, { foreignKey: "user_id", as: "cartItems" });
       User.hasMany(models.Order, { foreignKey: "user_id", as: "orders" });
+      User.hasMany(models.Notification, {
+        foreignKey: "sender_id",
+        as: "sentNotifications",
+      });
+
+      User.hasMany(models.Notification, {
+        foreignKey: "receiver_id",
+        as: "receivedNotifications",
+      });
     }
   }
   User.init(

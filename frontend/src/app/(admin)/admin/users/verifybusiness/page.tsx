@@ -5,6 +5,7 @@ import { s } from "framer-motion/client";
 import Image from "next/image";
 import AlertSuccess from "@/app/components/share/AlertSuccess";
 import AlertError from "@/app/components/share/AlertError";
+import SendNotification from "@/app/api/users/SendNotification";
 interface Business {
   id: string;
   userId: string;
@@ -101,6 +102,8 @@ const VerifyBusiness = () => {
       );
 
       if (res.status === 200) {
+        const data = await res.json();
+        SendNotification(data.userId, "RESPONSE_BUSINESS", `ADMIN ĐÃ ${data.status}`)
         setSucess(true);
         setTimeout(() => {
           setSucess(false);

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Send, Paperclip } from "lucide-react";
 import socket from "../../lib/socket";
 import UploadsFile from "../api/users/UploadsFile";
+import SendNotification from "../api/users/SendNotification";
 interface FriendsProps {
   following: {
     id: string;
@@ -34,6 +35,7 @@ const GetFriend = () => {
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [fileName, setFileName] = useState("");
+
   const fetchFriends = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/friends", {
@@ -77,7 +79,7 @@ const GetFriend = () => {
 
     const data = { recieveId, content, fileName };
     socket.emit("sendMessage", data);
-
+    SendNotification(recieveId, "MESSAGE", "Có Tin Nhắn Mới");
     setContent("");
   };
 

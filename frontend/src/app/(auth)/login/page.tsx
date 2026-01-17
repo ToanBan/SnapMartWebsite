@@ -14,12 +14,15 @@ const LoginPage = () => {
       body: formData,
       credentials: "include",
     });
+    const data = await res.json();
+
     if (res.ok) {
-      const data = await res.json();
+      console.log("djalksdjsald", data);
       localStorage.setItem("role", data.role);
       // localStorage.setItem("userId", data.userId)
-      window.location.href = "/";  
+      window.location.href = "/";
     } else {
+      console.log(data);
       setError(true);
       setTimeout(() => setError(false), 3000);
     }

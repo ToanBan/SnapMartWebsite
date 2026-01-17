@@ -1,4 +1,4 @@
-const { Comment, User, Message, Business } = require("../models");
+const { Comment, User, Message, Business, Notification } = require("../models");
 const { Op, where } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
@@ -54,7 +54,7 @@ const SendMessage = async (io, socket, data) => {
         receiverId: recieveId,
         content,
         fileName: content,
-        type
+        type,
       });
     } else {
       newMessage = await Message.create({
@@ -307,6 +307,111 @@ const DownloadFile = async (req, res, next) => {
   }
 };
 
+const HandleNotification = async (io, socket, data) => {
+  try {
+    let { receiver_id, type, title, content, is_read } = data;
+
+    console.log(receiver_id, type, title, content, is_read);
+    const senderId = socket.user.id;
+
+    if (!receiver_id) {
+      const admin = await User.findOne({ where: { role: "admin" } });
+      console.log("dhajkshdjashdkashdjaksd", admin.id)
+      if (!admin) return;
+      receiver_id = admin.id;
+    }
+
+    console.log("dahsjdjhaskdhasdhjskad", receiver_id);
+
+    
+    const newNotification = await Notification.create({
+      receiver_id,
+      sender_id: senderId,
+      type,
+      title,
+      content,
+      is_read,
+    });
+
+    const notificationWithSender = await Notification.findOne({
+      where: { id: newNotification.id },
+      include: [
+        {
+          model: User,
+          as: "sender",
+          attributes: ["id", "username", "avatar"],
+        },
+      ],
+    });
+
+    io.to(`user-${receiver_id}`).emit("receiveNotification", {
+      id: newNotification.id,
+      sender: {
+        id: notificationWithSender.sender.id,
+        username: notificationWithSender.sender.username,
+        avatar: notificationWithSender.sender.avatar,
+      },
+      type: newNotification.type,
+      content: newNotification.content,
+      createdAt: newNotification.createdAt,
+      is_read: newNotification.is_read,
+    });
+  } catch (error) {
+    console.error("HandleNotification error:", error);
+  }
+};
+
+const ReadNotification = async (io, socket, data) => {
+  try {
+    const { id } = data;
+    const notification = await Notification.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!notification) {
+      return;
+    }
+
+    await notification.update({ is_read: true });
+  } catch (error) {
+    console.error(error);
+    return;
+  }
+};
+
+const GetNotification = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const notifications = await Notification.findAll({
+      where: {
+        receiver_id: userId,
+        is_read: false,
+      },
+      include: [
+        {
+          model: User,
+          as: "sender",
+          attributes: ["id", "username", "avatar"],
+        },
+      ],
+    });
+    if (!notifications) {
+      return res.status(404).json({
+        message: "not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: notifications,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   AddComment,
   GetCommentByPostId,
@@ -316,4 +421,7 @@ module.exports = {
   GetMessageBusiness,
   UploadFile,
   DownloadFile,
+  HandleNotification,
+  ReadNotification,
+  GetNotification,
 };

@@ -5,7 +5,7 @@ import AlertError from "./AlertError";
 import { set } from "zod";
 //ts-ignore
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
+import SendNotification from "@/app/api/users/SendNotification";
 const RegisterBusiness = () => {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -26,6 +26,7 @@ const RegisterBusiness = () => {
       if (res.ok) {
         const data = await res.json();
         setSuccess(true);
+        SendNotification("", "REGISTER_BUSINESS", "Đăng Ký Doanh Nghiệp")
         AlertSuccess({ message: "Đăng ký doanh nghiệp thành công!" });
         setTimeout(() => {
           setSuccess(false);

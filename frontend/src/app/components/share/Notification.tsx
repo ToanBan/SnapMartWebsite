@@ -4,39 +4,14 @@ import { faBell } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import Link from "next/link";
-
-interface Notification {
-  id: string;
-  message: string;
-  sender: {
-    username: string;
-    avatar: string;
-    id: string;
-  };
-  type: string;
-  receiver: {
-    id: string;
-  };
-}
-
+import useNotifications from "@/hooks/useNotifications";
+import ReadNotification from "@/app/api/users/ReadNotification";
 const DisplayNotification = () => {
-  const [count, setCount] = useState(2);
-  const notifications: Notification[] = [
-    {
-      id: "1",
-      message: "Bạn có đơn hàng mới",
-      sender: { username: "Admin", avatar: "/avatar1.png", id: "u1" },
-      type: "order",
-      receiver: { id: "me" },
-    },
-    {
-      id: "2",
-      message: "Sản phẩm bạn theo dõi đang giảm giá",
-      sender: { username: "System", avatar: "/avatar2.png", id: "u2" },
-      type: "discount",
-      receiver: { id: "me" },
-    },
-  ];
+  const notifications = useNotifications();
+
+  useEffect(() => {
+    console.log(notifications);
+  }, [notifications]);
 
   return (
     <>
@@ -85,7 +60,7 @@ const DisplayNotification = () => {
             }
           />
           <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {count}
+            {notifications ? notifications.length : 0}
             <span className="visually-hidden">unread notifications</span>
           </span>
         </a>
@@ -98,28 +73,45 @@ const DisplayNotification = () => {
             notifications.map((note) => (
               <li key={note.id}>
                 <Link
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const result = ReadNotification(note.id);
+                    window.location.href = `${
+                      note.type === "ADD_PRODUCT"
+                        ? "/admin/business/verifyproduct"
+                        : note.type === "REGISTER_BUSINESS"
+                          ? "/admin/users/verifybusiness"
+                          : note.type === "ADMIN"
+                            ? "/business"
+                            : note.type === "RESPONSE_BUSINESS"
+                              ? "/business"
+                              : `/profile/${note.sender.id}`
+                    }`;
+                  }}
                   className="dropdown-item d-flex align-items-center"
                   href="#"
                 >
-                  <Image
-                    style={{
-                      width: "30px",
-                      height: "30px",
-                      objectFit: "cover",
-                    }}
-                    className="img-fluid rounded-circle mb-4 border border-3 border-info shadow-sm me-2"
-                    src={
-                      note.sender.avatar
-                        ? `https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg`
-                        : "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"
-                    }
-                    width={30}
-                    height={30}
-                    alt={`${note.sender.username}`}
-                  />
                   <div>
+                    <Image
+                      style={{
+                        width: "30px",
+                        height: "30px",
+                        objectFit: "cover",
+                      }}
+                      className="img-fluid rounded-circle border border-3 border-info shadow-sm me-2"
+                      src={
+                        note?.avatar
+                          ? `https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg`
+                          : "https://www.lewesac.co.uk/wp-content/uploads/2017/12/default-avatar.jpg"
+                      }
+                      width={30}
+                      height={30}
+                      alt={`${note.sender.username}`}
+                    />
+                  </div>
+                  <div className="">
                     <div className="fw-bold">{note.sender.username}</div>
-                    <div className="text-muted small">{note.message}</div>
+                    <div className="text-muted small">{note.content}</div>
                   </div>
                 </Link>
               </li>

@@ -145,7 +145,7 @@ const LoginAccount = async (req, res, next) => {
       where: { email, is_verified: true, status: "active" },
     });
     if (!user) {
-      return res.status(400).json({ message: "Account does not exist" });
+      return res.status(400).json({ message: "Account does not exist"});
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -529,6 +529,27 @@ const SeekBusiness = async (req, res, next) => {
   }
 };
 
+const FakeUser = async () => {
+  const password = "ToanBan@123";
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const ids = [8, 10, 12];
+
+  for (let i = 0; i < ids.length; i++) {
+    await User.create({
+      id: ids[i],
+      username: `user${ids[i]}`,
+      email: `user${ids[i]}@gmail.com`,
+      password: hashedPassword,
+      role: "user",
+      status: "active",
+      is_verified: 1,
+    });
+  }
+
+  console.log("Fake users created successfully");
+};
+
 module.exports = {
   RegisterAccount,
   LoginAccount,
@@ -544,4 +565,5 @@ module.exports = {
   ChangePassword,
   SearchProductByUser,
   SeekBusiness,
+  FakeUser
 };

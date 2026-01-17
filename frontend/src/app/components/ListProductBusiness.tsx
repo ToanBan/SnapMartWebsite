@@ -4,6 +4,7 @@ import AddProducts from "@/app/api/business/AddProducts";
 import DeleteProduct from "@/app/api/business/DeleteProduct";
 import EditProduct from "@/app/api/business/EditProduct";
 import Swal from "sweetalert2";
+import SendNotification from "../api/users/SendNotification";
 interface ProductsProps {
   id: string;
   productName: string;
@@ -66,6 +67,15 @@ const ListProductBusiness = ({
         setTimeout(() => setError(false), 3000);
         Swal.fire("Lỗi!", "Xảy ra lỗi khi xóa sản phẩm.", "error");
       }
+    }
+  };
+
+  const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
+    const result = await AddProducts(e);
+    if (result) {
+      Swal.fire("Đã Thêm!", "Sản phẩm đã được thêm thành công.", "success");
+      SendNotification("", "ADD_PRODUCT", "Vừa Mới Thêm Sản Phẩm");
+      return result;
     }
   };
 
@@ -241,9 +251,9 @@ const ListProductBusiness = ({
                         );
                       }
                     } else {
-                      const res = await AddProducts(e);
-                      setAddedProducts((prev) => [res.data, ...prev]);
-                      setProducts((prev) => [res.data, ...prev]);
+                      const res = await handleAddProduct(e);
+                      setAddedProducts((prev) => [res, ...prev]);
+                      setProducts((prev) => [res, ...prev]);
                       setShowModal(false);
                     }
                   }}

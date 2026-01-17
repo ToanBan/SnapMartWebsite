@@ -69,30 +69,6 @@ const GetVerifyBusinesses = async (req, res, next) => {
 
 const VerifyBusiness = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
-    const user = await User.findOne({ where: { id: decoded.id } });
-    if (!user || user.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-
     const { businessId, status } = req.body;
     const business = await Business.findOne({ where: { id: businessId } });
     if (!business) {
@@ -118,6 +94,7 @@ const VerifyBusiness = async (req, res, next) => {
     return res.status(200).json({
       businessId,
       status,
+      userId: business.userId,
     });
   } catch (error) {
     console.error(error);
@@ -165,8 +142,22 @@ const VerifyProduct = async (req, res, next) => {
     } else {
       return res.status(400).json({ message: "Invalid status" });
     }
+
+    const business = await Business.findOne({
+      where: {
+        id: product.businessId,
+      },
+    });
+
+    if (!business) {
+      return res.status(404).json({
+        message: "not found",
+      });
+    }
+
     return res.status(200).json({
       message: status,
+      userId: business.userId,
     });
   } catch (error) {
     next(error);
