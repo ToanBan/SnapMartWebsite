@@ -45,7 +45,7 @@ const GetVerifyBusinesses = async (req, res, next) => {
       if (business.bank_account_Id) {
         try {
           const account = await stripe.accounts.retrieve(
-            business.bank_account_Id
+            business.bank_account_Id,
           );
 
           stripeCondition = account.charges_enabled && account.payouts_enabled;
@@ -125,17 +125,53 @@ const GetProductsPending = async (req, res, next) => {
   }
 };
 
+const sendProductEmbedding = (product) => {
+  fetch("http://127.0.0.1:8001/embed/product", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      product_id: product.id,
+      name: product.productName,
+      description: product.description,
+    }),
+  })
+    .then(async (res) => {
+      const text = await res.text();
+      console.log("STATUS:", res.status);
+      console.log("RAW RESPONSE:", text);
+
+      if (!res.ok) {
+        throw new Error(text);
+      }
+
+      return JSON.parse(text);
+    })
+    .then((data) => {
+      console.log("Embedding response:", data);
+    })
+    .catch((err) => {
+      console.error("Embedding error:", err.message);
+    });
+};
+
 const VerifyProduct = async (req, res, next) => {
   try {
     const { productId, status } = req.body;
     const product = await Product.findOne({ where: { id: productId } });
     if (!product) {
-      return res.status(404).json({ message: "Business not found" });
+      return res.status(404).json({ message: "Product not found" });
     }
-
+    if (product.status === "approved") {
+      return res.status(400).json({
+        message: "Product already approved",
+      });
+    }
     if (status === "approval") {
       product.status = "approved";
       await product.save();
+      sendProductEmbedding(product);
     } else if (status === "rejected") {
       product.status = "rejected";
       await product.save();
@@ -144,15 +180,11 @@ const VerifyProduct = async (req, res, next) => {
     }
 
     const business = await Business.findOne({
-      where: {
-        id: product.businessId,
-      },
+      where: { id: product.businessId },
     });
 
     if (!business) {
-      return res.status(404).json({
-        message: "not found",
-      });
+      return res.status(404).json({ message: "Business not found" });
     }
 
     return res.status(200).json({
@@ -285,7 +317,7 @@ const GetRevenueAdmin = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "totalRevenue",
         ],
@@ -321,7 +353,7 @@ const GetRevenueAdmin = async (req, res, next) => {
       23,
       59,
       59,
-      999
+      999,
     );
 
     const monthlyRevenueResult = await OrderItem.findOne({
@@ -329,7 +361,7 @@ const GetRevenueAdmin = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "monthlyRevenue",
         ],
@@ -402,7 +434,7 @@ const GetRevenueAdmin = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "revenue",
         ],

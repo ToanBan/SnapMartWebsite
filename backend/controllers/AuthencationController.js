@@ -24,7 +24,7 @@ const GetAccount = async (req, res, next) => {
           return res.status(403).json({ message: "Invalid token" });
         }
         return decoded;
-      }
+      },
     );
 
     const user = await User.findOne({
@@ -78,7 +78,7 @@ const RegisterAccount = async (req, res, next) => {
     await sendMail(
       email,
       "Xác thực OTP đề đăng ký tài khoản",
-      `Ma OTP của bạn là ${otp}`
+      `Ma OTP của bạn là ${otp}`,
     );
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -145,7 +145,7 @@ const LoginAccount = async (req, res, next) => {
       where: { email, is_verified: true, status: "active" },
     });
     if (!user) {
-      return res.status(400).json({ message: "Account does not exist"});
+      return res.status(400).json({ message: "Account does not exist" });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
@@ -159,7 +159,7 @@ const LoginAccount = async (req, res, next) => {
         email: user.email,
       },
       process.env.ACCESS_TOKEN,
-      { expiresIn: "1d" }
+      { expiresIn: "30m" },
     );
     const refreshToken = jwt.sign(
       {
@@ -168,7 +168,7 @@ const LoginAccount = async (req, res, next) => {
         email: user.email,
       },
       process.env.REFRESH_TOKEN,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     res.cookie("token", token, {
@@ -189,6 +189,33 @@ const LoginAccount = async (req, res, next) => {
   } catch (error) {
     console.error(error);
     next(error);
+  }
+};
+
+const RefreshToken = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+    if (!refreshToken) return res.sendStatus(401);
+    const decodedeToken = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
+    if (!decodedeToken) return res.sendStatus(403);
+    const newAccessToken = jwt.sign(
+      {
+        id: decodedeToken.id,
+        username: decodedeToken.username,
+        email: decodedeToken.email,
+      },
+      process.env.ACCESS_TOKEN,
+      { expiresIn: "30m" },
+    );
+    res.cookie("token", newAccessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      path: "/",
+    });
+    return res.status(200).json({ message: newAccessToken });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -216,7 +243,7 @@ const ForgotAccount = async (req, res, next) => {
   const token = jwt.sign(
     { id: user.id, username: user.username, email: user.email },
     process.env.ACCESS_TOKEN,
-    { expiresIn: "30m" }
+    { expiresIn: "30m" },
   );
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   await redisClient.set("email", email);
@@ -227,7 +254,7 @@ const ForgotAccount = async (req, res, next) => {
   await sendMail(
     email,
     "Mã OTP của bạn",
-    `Ma OTP để đặt lại mật khẩu là ${otp}`
+    `Ma OTP để đặt lại mật khẩu là ${otp}`,
   );
 
   return res.status(200).json({
@@ -303,7 +330,7 @@ const GetDataLoginGoogle = async (req, res, next) => {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     if (!userRes.ok) throw new Error("Failed to fetch user info");
@@ -326,13 +353,13 @@ const GetDataLoginGoogle = async (req, res, next) => {
     const token = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
       process.env.ACCESS_TOKEN,
-      { expiresIn: "30m" }
+      { expiresIn: "30m" },
     );
 
     const refreshToken = jwt.sign(
       { id: user.id, username: user.username, email: user.email },
       process.env.REFRESH_TOKEN,
-      { expiresIn: "7d" }
+      { expiresIn: "7d" },
     );
 
     res.cookie("token", token, {
@@ -386,7 +413,7 @@ const EditProfile = async (req, res, next) => {
           return res.status(403).json({ message: "Invalid token" });
         }
         return decoded;
-      }
+      },
     );
 
     const userId = decoded.id;
@@ -438,7 +465,7 @@ const ChangePassword = async (req, res, next) => {
           return res.status(403).json({ message: "Invalid token" });
         }
         return decoded;
-      }
+      },
     );
 
     const userId = decoded.id;
@@ -452,7 +479,7 @@ const ChangePassword = async (req, res, next) => {
     }
     const isPasswordValid = await bcrypt.compare(
       currentPassword,
-      user.password
+      user.password,
     );
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Current password is incorrect" });
@@ -565,5 +592,6 @@ module.exports = {
   ChangePassword,
   SearchProductByUser,
   SeekBusiness,
-  FakeUser
+  FakeUser,
+  RefreshToken
 };

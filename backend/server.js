@@ -89,6 +89,7 @@ const {
   ChangePassword,
   SearchProductByUser,
   SeekBusiness,
+  RefreshToken
 } = require("./controllers/AuthencationController");
 const {
   GetProfileDetail,
@@ -235,6 +236,7 @@ io.on("connection", (socket) => {
 
 app.post("/api/register", upload.single(""), RegisterAccount);
 app.post("/api/login", upload.single(""), LoginAccount);
+app.get("/api/refresh-token", RefreshToken);
 app.post("/api/verify-otp", VerifyOTP);
 app.get("/api/user", GetAccount);
 app.post("/api/logout", LogoutAccount);

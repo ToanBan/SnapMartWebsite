@@ -37,6 +37,7 @@ const LoginPage = () => {
       console.error("không thể di chuyển đến google");
     }
     const data = await res.json();
+    // localStorage.removeItem("userActions");
     window.location.href = data.message;
   };
 

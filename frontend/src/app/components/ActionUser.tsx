@@ -4,33 +4,40 @@ export type UserAction = {
   type: string;
   productId?: string;
   query?: string;
-  productIds?:[]
+  productIds?: string[];
   timestamp: number;
 };
+
+const MAX_ACTIONS = 20;
 
 export const trackUserAction = (action: Omit<UserAction, "timestamp">) => {
   if (typeof window === "undefined") return;
 
-  const userId = localStorage.getItem("userId");
-  if (!userId) return;
-
-  const raw = localStorage.getItem("userActions");
-  const data: Record<string, UserAction[]> = raw ? JSON.parse(raw) : {};
-
-  if (!Array.isArray(data[userId])) {
-    data[userId] = [];
+  const userIdRaw = localStorage.getItem("userId");
+  if (!userIdRaw || userIdRaw === "null" || userIdRaw === "undefined") {
+    return;
   }
 
-  data[userId].push({
+  const userId = String(userIdRaw);
+  const storageKey = `userActions_${userId}`;
+
+  let actions: UserAction[] = [];
+  try {
+    const raw = localStorage.getItem(storageKey);
+    actions = raw ? JSON.parse(raw) : [];
+  } catch (err) {
+    console.error("Parse userActions error:", err);
+    actions = [];
+  }
+
+  actions.push({
     ...action,
     timestamp: Date.now(),
   });
 
-  if (data[userId].length > 20) {
-    data[userId].shift();
+  if (actions.length > MAX_ACTIONS) {
+    actions.shift();
   }
-
-  localStorage.setItem("userActions", JSON.stringify(data));
-  console.log("all action", raw)
-  console.log("User actions id:", data[userId]);
+  localStorage.setItem(storageKey, JSON.stringify(actions));
+  console.log(`User ${userId} actions:`, actions);
 };

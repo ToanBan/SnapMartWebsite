@@ -1,26 +1,19 @@
 import React from "react";
 import { trackUserAction } from "@/app/components/ActionUser";
+import api from "@/app/api/axios";
 const AddCart = async (
   productId: string,
   price: string,
-  onSuccess?: () => void
+  onSuccess?: () => void,
 ) => {
   try {
-    const res = await fetch("http://localhost:5000/api/carts", {
-      method: "POST",
-      body: JSON.stringify({ productId, price }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
+    const res = await api.post("/api/carts", {
+      productId,
+      price,
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to add to cart");
-    }
-
-    const data = await res.json();
-    trackUserAction({type:"add-cart", productId})
+    const data = res.data;
+    trackUserAction({ type: "add-cart", productId });
     if (onSuccess) onSuccess();
     return data;
   } catch (error) {
