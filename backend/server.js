@@ -186,6 +186,7 @@ const {
 } = require("./controllers/OrderController");
 
 const { ResponseToUser } = require("./controllers/ChatbotController");
+const PORT = process.env.PORT || 5000;
 app.post(
   "/api/webhook",
   express.raw({ type: "application/json" }),
@@ -367,6 +368,6 @@ app.post("/api/upload-file", upload.single("fileName"), UploadFile);
 app.get("/uploads/api/download/:filename", DownloadFile);
 app.get("/api/notifications", CheckUserAuthencation, GetNotification);
 app.use(errorLogger);
-server.listen(5000, () => {
-  console.log("Server is running on port 5000");
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
