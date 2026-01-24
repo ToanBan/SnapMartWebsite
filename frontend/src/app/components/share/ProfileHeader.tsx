@@ -21,10 +21,14 @@ const ProfileHeader = ({
   countFollow?: CountFollowProps;
 }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
-
+  const userHookResult = useUser(initialAccount);
   const { account, isLoading, isError } = isOwnProfile
-    ? useUser(initialAccount)
-    : { account: initialAccount, isLoading: false, isError: false };
+    ? userHookResult
+    : {
+        account: initialAccount,
+        isLoading: false,
+        isError: false,
+      };
 
   const [follower, setFollower] = useState(countFollow?.follower);
   const [following, setFollowing] = useState(countFollow?.following);
@@ -35,13 +39,16 @@ const ProfileHeader = ({
     e.preventDefault();
     if (!profileId) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
 
       if (res.status === 201) {
         setStatusFollow("Unfollow");
@@ -50,7 +57,7 @@ const ProfileHeader = ({
       } else {
         setStatusFollow("Follow");
         setFollower((prev) =>
-          prev && Number(prev) > 0 ? String(Number(prev) - 1) : "0"
+          prev && Number(prev) > 0 ? String(Number(prev) - 1) : "0",
         );
       }
 
@@ -64,13 +71,16 @@ const ProfileHeader = ({
 
   const CheckFollow = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`, {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
       if (res.status === 200) {
         setStatusFollow("UnFollow");
       } else {
