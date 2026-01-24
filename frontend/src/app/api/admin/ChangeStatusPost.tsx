@@ -2,7 +2,7 @@ import React from "react";
 
 const ChangeStatusPost = async (postId: string, status: string) => {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/posts/change-status", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/posts/change-status`, {
       method: "POST",
       body: JSON.stringify({ postId, status }),
       headers: {

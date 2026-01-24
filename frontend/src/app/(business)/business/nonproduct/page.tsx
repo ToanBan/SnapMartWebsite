@@ -48,7 +48,7 @@ const NonProduct = async ({
 
         <Pagination
           page={page}
-          pathName={`http://localhost:3000/business/nonproduct?page=`}
+          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/business/nonproduct?page=`}
         />
       </div>
 

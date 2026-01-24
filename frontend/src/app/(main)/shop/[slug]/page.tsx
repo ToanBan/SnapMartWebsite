@@ -14,7 +14,7 @@ const ShopOfBusiness = async ({
 }) => {
   const { slug } = await params;
   const data = await GetSeekShop(slug);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const page = Number(searchParams.page) || 1;
 
   const products = await GetProductsByBusiness(slug, page);

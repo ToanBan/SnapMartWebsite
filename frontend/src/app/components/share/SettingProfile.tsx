@@ -59,7 +59,7 @@ const SettingProfile = () => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     try {
-      const res = await fetch("http://localhost:5000/api/user/edit", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/edit`, {
         method: "POST",
         credentials: "include",
         body: formData,
@@ -101,7 +101,7 @@ const SettingProfile = () => {
     }
     try {
       const res = await fetch(
-        "http://localhost:5000/api/user/change-password",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/change-password`,
         {
           method: "POST",
           body: formData,

@@ -2,7 +2,7 @@ import React from 'react'
 
 const GetSeekShop = async(slug:string) => {
   try {
-    const res = await fetch(`http://localhost:5000/api/shop/${slug}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shop/${slug}`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json"

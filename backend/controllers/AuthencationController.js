@@ -8,28 +8,11 @@ const path = require("path");
 const fs = require("fs");
 const GetAccount = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      },
-    );
+    const userId = req.user.id;
 
     const user = await User.findOne({
       where: {
-        email: decoded.email,
+        id: userId,
         is_verified: true,
       },
     });
@@ -157,6 +140,7 @@ const LoginAccount = async (req, res, next) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       },
       process.env.ACCESS_TOKEN,
       { expiresIn: "30m" },
@@ -166,6 +150,7 @@ const LoginAccount = async (req, res, next) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
       },
       process.env.REFRESH_TOKEN,
       { expiresIn: "7d" },
@@ -203,6 +188,7 @@ const RefreshToken = async (req, res, next) => {
         id: decodedeToken.id,
         username: decodedeToken.username,
         email: decodedeToken.email,
+        role: decodedeToken.role,
       },
       process.env.ACCESS_TOKEN,
       { expiresIn: "30m" },
@@ -287,6 +273,19 @@ const ResetPasswordAccount = async (req, res, next) => {
   }
 };
 
+const CheckRoleUser = async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
+    const user = await User.findOne({ where: { id: decoded.id} });
+    return res.status(200).json({
+      message: user.role,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const RedirectGoogleLogin = async (req, res, next) => {
   try {
     const redirectUri = `https://accounts.google.com/o/oauth2/v2/auth
@@ -351,13 +350,23 @@ const GetDataLoginGoogle = async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
       process.env.ACCESS_TOKEN,
       { expiresIn: "30m" },
     );
 
     const refreshToken = jwt.sign(
-      { id: user.id, username: user.username, email: user.email },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
       process.env.REFRESH_TOKEN,
       { expiresIn: "7d" },
     );
@@ -397,26 +406,7 @@ const CheckStepAuthencation = async (req, res, next) => {
 
 const EditProfile = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      },
-    );
-
-    const userId = decoded.id;
+    const userId = req.user.id;
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -449,26 +439,7 @@ const EditProfile = async (req, res, next) => {
 
 const ChangePassword = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      },
-    );
-
-    const userId = decoded.id;
+    const userId = req.user.id;
     const user = await User.findByPk(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -593,5 +564,6 @@ module.exports = {
   SearchProductByUser,
   SeekBusiness,
   FakeUser,
-  RefreshToken
+  RefreshToken,
+  CheckRoleUser,
 };

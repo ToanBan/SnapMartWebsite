@@ -2,7 +2,7 @@ import React from 'react'
 
 const GetNotifications = async() => {
   try {
-    const res = await fetch("http://localhost:5000/api/notifications", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json"

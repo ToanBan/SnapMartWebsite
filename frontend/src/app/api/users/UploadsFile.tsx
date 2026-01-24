@@ -4,7 +4,7 @@ const UploadsFile = async (file: File) => {
   const formData = new FormData();
   formData.append("fileName", file);
   try {
-    const res = await fetch("http://localhost:5000/api/upload-file", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload-file`, {
       method: "POST",
       credentials: "include",
       body: formData,

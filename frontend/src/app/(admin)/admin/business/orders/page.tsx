@@ -9,7 +9,7 @@ const OrdersPage = async({searchParams}:{searchParams:{page?:string}}) => {
     <>
       <div className='mt-5' style={{width:"100%"}}>
         <ListOrdersAdmin orders={orders}/>
-        <Pagination page={page} pathName={`http://localhost:3000/admin/business/orders?page=`}/>
+        <Pagination page={page} pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/business/orders?page=`}/>
       </div>
     </>
   )

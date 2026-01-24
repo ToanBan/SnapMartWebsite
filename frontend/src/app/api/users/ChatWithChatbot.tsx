@@ -2,7 +2,7 @@ import React from "react";
 
 const ChatWithChatbot = async (caption: string) => {
   try {
-    const res = await fetch("http://localhost:5000/api/chatbot", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chatbot`, {
       method: "POST",
       body: JSON.stringify({ caption }),
       headers: {

@@ -10,7 +10,7 @@ const LoginPartial = () => {
   const [role, setRole] = useState("");
   const handleLogout = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/logout", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/logout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

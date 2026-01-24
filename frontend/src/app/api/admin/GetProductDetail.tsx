@@ -5,12 +5,15 @@ const GetProductDetail = async (productId: string) => {
     if (!productId) {
       throw new Error("Product ID is required");
     }
-    const res = await fetch(`http://localhost:5000/api/products/${productId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (res.ok) {
       const data = await res.json();

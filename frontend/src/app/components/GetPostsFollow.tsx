@@ -6,7 +6,7 @@ const GetPostsFollow = async () => {
   const token = await cookieStore.get("token")?.value;
 
   try {
-    const res = await fetch("http://localhost:5000/api/posts/follow", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/follow`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -7,7 +7,7 @@ const GetUsers = async(page:number) => {
     if(!token) return;
 
     try {
-        const res = await fetch(`http://localhost:5000/api/admin/users?page=${page}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users?page=${page}`, {
             method:"GET", 
             headers:{
                 "Content-Type":"application/json", 

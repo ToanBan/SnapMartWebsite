@@ -24,7 +24,7 @@ const OrderPage = async ({
           </div>
         </div>
 
-        <Pagination page={page} pathName={`http://localhost:3000/business/orders?page=`}/>
+        <Pagination page={page} pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/business/orders?page=`}/>
       </div>
     </>
   );

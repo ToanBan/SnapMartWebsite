@@ -16,7 +16,7 @@ const UsersPage = async ({
         <ListAllUsersAdmin usersData={users} />
         <Pagination
           page={page}
-          pathName={`http://localhost:3000/admin/users/users?page=`}
+          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/users/users?page=`}
         />
       </div>
     </>

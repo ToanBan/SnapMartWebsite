@@ -8,7 +8,7 @@ const EditProduct = async (
   try {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const res = await fetch(`http://localhost:5000/api/products/${productId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
       method: "POST",
       body: formData,
       credentials: "include",

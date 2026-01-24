@@ -17,7 +17,7 @@ const RegisterBusiness = () => {
     try {
       const formData = new FormData(e.target as HTMLFormElement);
 
-      const res = await fetch("http://localhost:5000/api/business/register", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/register`, {
         method: "POST",
         body: formData,
         credentials: "include",

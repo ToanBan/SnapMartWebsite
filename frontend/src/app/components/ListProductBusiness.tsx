@@ -28,7 +28,7 @@ const ListProductBusiness = ({
   );
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [page, setPage] = useState(1);
   const [addedProducts, setAddedProducts] = useState<ProductsProps[]>([]);
   useEffect(() => {

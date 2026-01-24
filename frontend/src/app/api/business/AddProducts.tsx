@@ -4,7 +4,7 @@ const AddProducts = async(e:React.FormEvent<HTMLFormElement>) => {
   try {
     e.preventDefault();
     const formData = new FormData(e.currentTarget)
-    const res = await fetch("http://localhost:5000/api/business/product/add", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/product/add`, {
         method:"POST", 
         credentials:"include", 
         body:formData  

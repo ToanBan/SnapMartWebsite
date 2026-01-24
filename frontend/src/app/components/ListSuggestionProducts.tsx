@@ -10,7 +10,7 @@ import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
 const ListSuggestionProducts = () => {
   const [products, setProducts] = useState<any[]>([]);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 

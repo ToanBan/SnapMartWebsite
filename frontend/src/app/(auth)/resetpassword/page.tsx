@@ -11,7 +11,7 @@ const ResetPasswordPage = () => {
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const res = await fetch("http://localhost:5000/api/reset-password", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reset-password`, {
       method: "POST",
       body: formData,
       credentials: "include",

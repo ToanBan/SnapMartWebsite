@@ -9,7 +9,7 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const res = await fetch("http://localhost:5000/api/login", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
       method: "POST",
       body: formData,
       credentials: "include",
@@ -17,9 +17,7 @@ const LoginPage = () => {
     const data = await res.json();
 
     if (res.ok) {
-      console.log("djalksdjsald", data);
       localStorage.setItem("role", data.role);
-      // localStorage.setItem("userId", data.userId)
       window.location.href = "/";
     } else {
       console.log(data);
@@ -29,7 +27,7 @@ const LoginPage = () => {
   };
 
   const handleRedirectGoogle = async () => {
-    const res = await fetch("http://localhost:5000/api/google", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/google`, {
       method: "GET",
       credentials: "include",
     });
@@ -37,7 +35,6 @@ const LoginPage = () => {
       console.error("không thể di chuyển đến google");
     }
     const data = await res.json();
-    // localStorage.removeItem("userActions");
     window.location.href = data.message;
   };
 

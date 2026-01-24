@@ -1,6 +1,6 @@
 const SendAction = async ({ actions }: { actions: any[] }) => {
   try {
-    const res = await fetch("http://localhost:5000/api/send-action", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/send-action`, {
       method: "POST",
       body: JSON.stringify({ actions }),
       headers: {

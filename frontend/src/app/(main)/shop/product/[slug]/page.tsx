@@ -9,7 +9,7 @@ const ProductDetail = async ({
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const product = await GetProductDetail(slug);
 
   return (

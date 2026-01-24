@@ -2,7 +2,7 @@ import React from 'react'
 
 const TransactionCod = async(orderId:string,) => {
   try {
-    const res = await fetch("http://localhost:5000/api/transaction-cod", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/transaction-cod`, {
         method:"POST", 
         credentials:"include", 
         body:JSON.stringify({orderId}), 

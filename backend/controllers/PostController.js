@@ -2,31 +2,14 @@ const { Post, User, Follow, PostReaction, sequelize } = require("../models");
 const bcrypt = require("bcrypt");
 const redisClient = require("../extensions/redis");
 const jwt = require("jsonwebtoken");
-const { where, fn, col, Op} = require("sequelize");
+const { where, fn, col, Op } = require("sequelize");
 const path = require("path");
 const fs = require("fs");
 const { faker, de } = require("@faker-js/faker");
 const { type } = require("os");
 const AddPost = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
+    const userId = req.user.id;
 
     const { post_title } = req.body;
 
@@ -42,7 +25,7 @@ const AddPost = async (req, res, next) => {
     }
 
     await Post.create({
-      userId: decoded.id,
+      userId,
       post_url: fileName,
       post_caption: post_title,
       type: typeFile,
@@ -125,25 +108,6 @@ const GetPostOtherUser = async (req, res, next) => {
 
 const DeletePostUser = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
     const { id } = req.params;
 
     const oldPost = await Post.findOne({
@@ -179,25 +143,6 @@ const DeletePostUser = async (req, res, next) => {
 
 const EditPostUser = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
     const { id } = req.params;
     const { post_title } = req.body;
     const filePath = req.file;
@@ -233,7 +178,7 @@ const EditPostUser = async (req, res, next) => {
         const oldFilePath = path.join(
           __dirname,
           "../uploads",
-          oldPost.post_url
+          oldPost.post_url,
         );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
@@ -245,7 +190,7 @@ const EditPostUser = async (req, res, next) => {
         const oldFilePath = path.join(
           __dirname,
           "../uploads",
-          oldPost.post_url
+          oldPost.post_url,
         );
         if (fs.existsSync(oldFilePath)) {
           fs.unlinkSync(oldFilePath);
@@ -261,7 +206,7 @@ const EditPostUser = async (req, res, next) => {
       },
       {
         where: { id },
-      }
+      },
     );
 
     const updatedPost = await Post.findOne({ where: { id } });
@@ -294,7 +239,7 @@ const GetPostsFollow = async (req, res, next) => {
     const posts = await Post.findAll({
       where: whereCondition,
       limit,
-      distinct: true, 
+      distinct: true,
       include: [
         {
           model: User,
@@ -311,7 +256,7 @@ const GetPostsFollow = async (req, res, next) => {
         },
         {
           model: PostReaction,
-          required: false, 
+          required: false,
           attributes: ["id", "userId", "reactionType"],
           where: { userId },
         },
@@ -344,25 +289,8 @@ const GetPostsFollow = async (req, res, next) => {
 
 const SharePost = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-    const userId = decoded.id;
+    
+    const userId = req.user.id
     const { postId, caption } = req.body;
     const sharedPost = await Post.create({
       userId,
@@ -460,7 +388,7 @@ const FakePostForUser = async () => {
     }
 
     console.log(
-      `Đã tạo ${postsToCreate} bài post giả, tổng số hiện tại: ${60}`
+      `Đã tạo ${postsToCreate} bài post giả, tổng số hiện tại: ${60}`,
     );
   } catch (error) {
     next(error);

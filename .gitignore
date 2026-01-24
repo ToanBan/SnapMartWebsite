@@ -1,2 +1,3 @@
 backend/.env
 backend/data/product_vectors.json
+frontend/.env.local

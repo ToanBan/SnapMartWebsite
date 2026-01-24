@@ -10,24 +10,8 @@ const { count } = require("console");
 
 const ToggleReaction = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-    const userId = decoded.id;
+   
+    const userId = req.user.id
     const { valueReaction, postId } = req.body;
 
     const existReaction = await PostReaction.findOne({
@@ -96,24 +80,8 @@ const GetCountLikeForPost = async (req, res, next) => {
 
 const CheckDisplayReaction = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-    const userId = decoded.id;
+    
+    const userId = req.user.id
     const { id } = req.params;
     const existReaction = await PostReaction.findOne({
       where: {

@@ -2,7 +2,7 @@ import React from 'react'
 
 const ReportPort = async(postId:string) => {
   try {
-    const res = await fetch(`http://localhost:5000/api/posts/report/${postId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/report/${postId}`, {
         method:"POST", 
         headers:{
             "Content-Type" : "application/json"

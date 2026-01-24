@@ -11,14 +11,14 @@ const PostsPage = async ({
 
 
   const posts = await GetPostsAdmin(page);
-
+  
   return (
     <>
       <div style={{ width: "100%" }} className="mt-5">
         <ListPostsAdmin dataPosts={posts} />
         <Pagination
           page={page}
-          pathName={`http://localhost:3000/admin/users/posts?page=`}
+          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/users/posts?page=`}
         />
       </div>
     </>

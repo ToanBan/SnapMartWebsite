@@ -4,7 +4,7 @@ import React from "react";
 
 const VerifyProduct = async (productId: string, status: string) => {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/product/verify", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/product/verify`, {
       method: "POST",
       credentials: "include",
       body: JSON.stringify({ productId, status }),

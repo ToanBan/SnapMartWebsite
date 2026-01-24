@@ -33,7 +33,7 @@ app.use(
     origin: "http://localhost:3000",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -89,7 +89,8 @@ const {
   ChangePassword,
   SearchProductByUser,
   SeekBusiness,
-  RefreshToken
+  RefreshToken,
+  CheckRoleUser
 } = require("./controllers/AuthencationController");
 const {
   GetProfileDetail,
@@ -188,7 +189,7 @@ const { ResponseToUser } = require("./controllers/ChatbotController");
 app.post(
   "/api/webhook",
   express.raw({ type: "application/json" }),
-  HandleSuccessTransaction
+  HandleSuccessTransaction,
 );
 
 app.use(cookieParser());
@@ -238,34 +239,59 @@ app.post("/api/register", upload.single(""), RegisterAccount);
 app.post("/api/login", upload.single(""), LoginAccount);
 app.get("/api/refresh-token", RefreshToken);
 app.post("/api/verify-otp", VerifyOTP);
-app.get("/api/user", GetAccount);
+app.get("/api/user", CheckUserAuthencation, GetAccount);
 app.post("/api/logout", LogoutAccount);
 app.post("/api/forgot", ForgotAccount);
 app.post("/api/reset-password", upload.single(""), ResetPasswordAccount);
+app.get("/api/role", CheckRoleUser);
 app.get("/api/google", RedirectGoogleLogin);
 app.get("/api/auth/google/callback", GetDataLoginGoogle);
 app.get("/api/check-step", CheckStepAuthencation);
-app.post("/api/user/edit", upload.single("avatar"), EditProfile);
-app.post("/api/user/change-password", upload.single(""), ChangePassword);
+app.post(
+  "/api/user/edit",
+  upload.single("avatar"),
+  CheckUserAuthencation,
+  EditProfile,
+);
+app.post(
+  "/api/user/change-password",
+  upload.single(""),
+  CheckUserAuthencation,
+  ChangePassword,
+);
 app.get("/api/profile/:id", GetProfileDetail);
-app.get("/api/search/profile", SearchProfile);
-app.post("/api/posts", upload.single("file_path"), AddPost);
+app.get("/api/search/profile", CheckUserAuthencation, SearchProfile);
+app.post(
+  "/api/posts",
+  upload.single("file_path"),
+  CheckUserAuthencation,
+  AddPost,
+);
 app.get("/api/posts", CheckUserAuthencation, GetPost);
 app.get("/api/user/posts/:id", GetPostOtherUser);
-app.delete("/api/posts/:id", DeletePostUser);
-app.put("/api/posts/:id", upload.single("file_path"), EditPostUser);
-app.post("/api/follow/:id", FollowUser);
-app.get("/api/follow/:id", CheckFollow);
-app.get("/api/user/follow/:id", CountFollow);
+app.delete("/api/posts/:id", CheckUserAuthencation, DeletePostUser);
+app.put(
+  "/api/posts/:id",
+  upload.single("file_path"),
+  CheckUserAuthencation,
+  EditPostUser,
+);
+app.post("/api/follow/:id", CheckUserAuthencation, FollowUser);
+app.get("/api/follow/:id", CheckUserAuthencation, CheckFollow);
+app.get("/api/user/follow/:id", CheckUserAuthencation, CountFollow);
 app.get("/api/posts/follow", CheckUserAuthencation, GetPostsFollow);
-app.post("/api/post/reaction", ToggleReaction);
-app.get("/api/post/check_reaction/:id", CheckDisplayReaction);
+app.post("/api/post/reaction", CheckUserAuthencation, ToggleReaction);
+app.get(
+  "/api/post/check_reaction/:id",
+  CheckUserAuthencation,
+  CheckDisplayReaction,
+);
 app.get("/api/count_reaction/:id", GetCountLikeForPost);
 app.get("/api/comments/:postId", GetCommentByPostId);
-app.post("/api/posts/share", SharePost);
+app.post("/api/posts/share", CheckUserAuthencation, SharePost);
 app.get("/api/posts/share", GetSharePost);
 app.get("/api/posts/share/:userid", GetSharePost);
-app.get("/api/friends", GetFriend);
+app.get("/api/friends", CheckUserAuthencation, GetFriend);
 app.get("/api/messages", CheckUserAuthencation, GetMessageByUserId);
 app.post(
   "/api/business/register",
@@ -273,17 +299,17 @@ app.post(
     { name: "logo", maxCount: 1 },
     { name: "licence", maxCount: 1 },
   ]),
-  RegisterBusiness
+  RegisterBusiness,
 );
 
 app.get("/api/admin/verify-businesses", GetVerifyBusinesses);
-app.post("/api/admin/verify-business", CheckAdmin,VerifyBusiness);
+app.post("/api/admin/verify-business", CheckAdmin, VerifyBusiness);
 app.get("/api/check_teacher", CheckUserAuthencation, CheckTeacherId);
 app.post(
   "/api/business/product/add",
   CheckUserAuthencation,
   upload.single("productImage"),
-  AddProduct
+  AddProduct,
 );
 app.get("/api/business/product", CheckUserAuthencation, GetAllProducts);
 app.get("/api/admin/business/products", CheckAdmin, GetProductsPending);
@@ -295,7 +321,7 @@ app.post(
   "/api/products/:id",
   CheckUserAuthencation,
   upload.single("productImage"),
-  EditProductById
+  EditProductById,
 );
 app.get("/api/businesses", CheckAdmin, GetBusinesses);
 app.post("/api/carts", CheckUserAuthencation, AddCartItem);
@@ -316,13 +342,13 @@ app.get("/api/business/revenue", CheckUserAuthencation, GetRevenue);
 app.get(
   "/api/business/unsold-product",
   CheckUserAuthencation,
-  GetUnsoldProduct
+  GetUnsoldProduct,
 );
 app.get("/api/shop/:id", SeekBusiness);
 app.get(
   "/api/users/messages",
   CheckUserAuthencation,
-  GetUserSentMessageToBusiness
+  GetUserSentMessageToBusiness,
 );
 app.get("/api/messages-business", CheckUserAuthencation, GetMessageBusiness);
 app.get("/api/products/shop/:id", GetProductsByBusiness);

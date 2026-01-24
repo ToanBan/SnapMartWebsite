@@ -12,7 +12,7 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
   let sharePosts = [];
   try {
     if (slug) {
-      const res = await fetch(`http://localhost:5000/api/profile/${slug}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/${slug}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -20,7 +20,7 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
       }).then((data) => data.json());
 
       const resPost = await fetch(
-        `http://localhost:5000/api/user/posts/${slug}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/user/posts/${slug}`,
         {
           method: "GET",
           headers: {
@@ -39,7 +39,7 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
   }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/posts/share/${slug}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/share/${slug}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

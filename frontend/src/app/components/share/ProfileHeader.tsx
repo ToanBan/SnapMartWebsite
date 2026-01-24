@@ -20,7 +20,7 @@ const ProfileHeader = ({
   profileId?: string;
   countFollow?: CountFollowProps;
 }) => {
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   const { account, isLoading, isError } = isOwnProfile
     ? useUser(initialAccount)
@@ -35,7 +35,7 @@ const ProfileHeader = ({
     e.preventDefault();
     if (!profileId) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/follow/${profileId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -64,7 +64,7 @@ const ProfileHeader = ({
 
   const CheckFollow = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/follow/${profileId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/follow/${profileId}`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -119,15 +119,15 @@ const ProfileHeader = ({
 
       <div className="profile-stats">
         <div className="stat-item">
-          <span className="stat-number">{follower}</span>
+          <span className="stat-number">{follower || 0}</span>
           <span className="stat-label">Followers</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{following}</span>
+          <span className="stat-number">{following || 0}</span>
           <span className="stat-label">Following</span>
         </div>
         <div className="stat-item">
-          <span className="stat-number">{likes}</span>
+          <span className="stat-number">{likes || 0}</span>
           <span className="stat-label">Likes</span>
         </div>
       </div>

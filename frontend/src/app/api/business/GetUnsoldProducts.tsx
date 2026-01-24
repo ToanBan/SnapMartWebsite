@@ -5,7 +5,7 @@ const GetUnsoldProducts = async (page:number) => {
   const token = (await cookieStore).get("token")?.value;
   if (!token) return;
   try {
-    const res = await fetch(`http://localhost:5000/api/business/unsold-product?page=${page}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/unsold-product?page=${page}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

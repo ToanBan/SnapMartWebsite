@@ -9,7 +9,7 @@ const CountFollow = async (userId?:string) => {
   }
 
   try {
-    const res = await fetch(`http://localhost:5000/api/user/follow/${userId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/follow/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ const CountFollow = async (userId?:string) => {
     return data;
   } catch (error) {
     console.error("Server Error");
-    return;
+    return [];
   }
 };
 

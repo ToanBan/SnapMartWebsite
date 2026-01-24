@@ -30,7 +30,7 @@ const GetFriend = () => {
     null
   );
   const [showChat, setShowChat] = useState(false);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -38,7 +38,7 @@ const GetFriend = () => {
 
   const fetchFriends = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/friends", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/friends`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -56,7 +56,7 @@ const GetFriend = () => {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/messages", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/messages`, {
         method: "GET",
         credentials: "include",
         headers: {

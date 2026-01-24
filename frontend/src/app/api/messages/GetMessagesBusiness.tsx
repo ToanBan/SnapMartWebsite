@@ -2,7 +2,7 @@ import React from 'react'
 
 const GetMessagesBusiness = async() => {
     try {
-        const res = await fetch("http://localhost:5000/api/messages-business", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/messages-business`, {
             method:"GET", 
             credentials:"include", 
             headers:{

@@ -2,7 +2,7 @@ import React from "react";
 
 const GetListBusinesses = async () => {
   try {
-    const res = await fetch("http://localhost:5000/api/businesses", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/businesses`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

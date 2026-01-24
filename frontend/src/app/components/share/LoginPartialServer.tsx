@@ -7,7 +7,7 @@ export default async function LoginPartialServer() {
 
   let account = null;
   if (token) {
-    const res = await fetch("http://localhost:5000/api/user", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
       headers: { Cookie: `token=${token}` },
       cache: "no-store",
     });

@@ -50,7 +50,7 @@ const RegisterPage = ({ message }: { message: string }) => {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/register", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
         method: "POST",
         body: formData,
         credentials: "include",

@@ -11,6 +11,7 @@ import { Globe, Users, ChevronDown } from "lucide-react";
 import ReportPort from "@/app/api/users/ReportPort";
 import AlertSuccess from "./AlertSuccess";
 import { success } from "zod";
+import PostCreator from "../PostCreator";
 interface PostProps {
   id: string;
   post_url: string | null;
@@ -35,7 +36,7 @@ const PostProfile = ({
   initialPosts: PostProps[];
   postsPublic: any[];
 }) => {
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState("public");
   const [openPostId, setOpenPostId] = useState<string | null>(null);
@@ -73,7 +74,7 @@ const PostProfile = ({
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:5000/api/posts/follow?cursor=${cursor ?? ""}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/posts/follow?cursor=${cursor ?? ""}`,
         {
           method: "GET",
           credentials: "include",
@@ -147,6 +148,8 @@ const PostProfile = ({
           marginTop: "120px",
         }}
       >
+
+        <PostCreator/>
         {privacy === "friends" &&
           Array.isArray(posts) &&
           posts.map((post, index) => (
@@ -259,7 +262,7 @@ const PostProfile = ({
             </div>
           ))}
         <div ref={observerRef} style={{ height: "1px" }} />
-
+          
         {privacy == "public" &&
           Array.isArray(postsPublic) &&
           postsPublic.map((post) => (
@@ -292,6 +295,7 @@ const PostProfile = ({
           ))}
       </div>
 
+     
       <div className="fixed-top-right">
         <div className="dropdown">
           <button

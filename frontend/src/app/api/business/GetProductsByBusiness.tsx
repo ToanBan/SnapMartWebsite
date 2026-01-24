@@ -2,7 +2,7 @@ import React from 'react'
 
 const GetProductsByBusiness = async(shopId:string, page?:number) => {
   try {
-    const res = await fetch(`http://localhost:5000/api/products/shop/${shopId}?page=${page}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/shop/${shopId}?page=${page}`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json"

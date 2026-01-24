@@ -7,7 +7,7 @@ export default async function GetProfileDetail({profileId}:{profileId:string}) {
 
   let profile = null;
   if (token) {
-    const res = await fetch(`http://localhost:5000/api/profile/${profileId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/${profileId}`, {
       headers: { Cookie: `token=${token}` },
       cache: "no-store",
     });

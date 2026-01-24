@@ -27,7 +27,7 @@ const VerifyBusiness = () => {
   const [success, setSucess] = useState(false);
   const [error, setError] = useState(false);
   const [condition, setCondition] = useState(false);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   useEffect(() => {
     if (typeof window !== "undefined" && selectedBusiness) {
@@ -66,7 +66,7 @@ const VerifyBusiness = () => {
   const GetVerifyBusinesses = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/admin/verify-businesses",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/verify-businesses`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -90,7 +90,7 @@ const VerifyBusiness = () => {
   const handleVerifyBusiness = async (businessId: string, status: string) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/admin/verify-business",
+        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/verify-business`,
         {
           method: "POST",
           headers: {

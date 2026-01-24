@@ -9,7 +9,7 @@ const ErrorsPage = async({searchParams}:{searchParams:{page?:string}}) => {
     <>
       <div className='mt-5' style={{width:"100%"}}>
         <ListErrorAdmin errors={errors}/>
-        <Pagination page={page} pathName={`http://localhost:3000/admin/errors?page=`}/>
+        <Pagination page={page} pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/errors?page=`}/>
       </div>
     </>
   )

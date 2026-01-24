@@ -6,7 +6,7 @@ const GetUsesMessages = async() => {
   const token = (await cookieStore).get("token")?.value;
   if(!token) return
   try {
-    const res = await fetch("http://localhost:5000/api/users/messages", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/messages`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json", 

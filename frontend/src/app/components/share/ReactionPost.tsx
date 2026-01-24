@@ -27,7 +27,7 @@ const ReactionPost = ({
 
   const HandleToggleReaction = async (valueReaction: string) => {
     try {
-      const res = await fetch("http://localhost:5000/api/post/reaction", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/post/reaction`, {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({ valueReaction, postId }),

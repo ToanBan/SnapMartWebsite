@@ -7,7 +7,7 @@ const GetOrdersAdmin = async(page:number) => {
   if(!token) return;
 
   try {
-    const res = await fetch(`http://localhost:5000/api/admin/orders?page=${page}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders?page=${page}`, {
         method:"GET", 
         headers:{
             "Content-Type" : "application/json", 

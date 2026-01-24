@@ -2,7 +2,7 @@ import React from 'react'
 
 const HandleChangeRole = async(role:string, userId:string) => {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/change-role", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/change-role`, {
         method:"POST", 
         body:JSON.stringify({role, userId}), 
         headers:{

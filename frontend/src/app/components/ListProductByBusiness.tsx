@@ -11,7 +11,7 @@ interface ProductProps {
 }
 
 const ListProductByBusiness = ({ products, shopId, page}: { products: ProductProps[], shopId:string, page:number}) => {
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   console.log(products);
   return (
     <>
@@ -55,7 +55,7 @@ const ListProductByBusiness = ({ products, shopId, page}: { products: ProductPro
         </div>
       </section>
 
-      <Pagination page={page} pathName={`http://localhost:3000/shop/${shopId}?page=`} />
+      <Pagination page={page} pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/shop/${shopId}?page=`} />
     </>
   );
 };

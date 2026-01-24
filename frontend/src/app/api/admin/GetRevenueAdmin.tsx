@@ -6,7 +6,7 @@ const GetRevenueAdmin = async() => {
     const cookieStore = cookies();
     const token = (await cookieStore).get("token")?.value;
     if(!token) return
-    const res = await fetch("http://localhost:5000/api/admin/revenue", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/revenue`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json",

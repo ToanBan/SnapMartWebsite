@@ -30,7 +30,7 @@ interface BusinessProduct {
 }
 
 const BusinessPage = () => {
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [businesses, setBusinesses] = useState<BusinessProduct[]>([]);
   const [expandedBusinessId, setExpandedBusinessId] = useState<string | null>(
     null

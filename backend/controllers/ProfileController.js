@@ -32,27 +32,8 @@ const GetProfileDetail = async (req, res, next) => {
 
 const SearchProfile = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-    const userId = decoded.id;
+    
+    const userId = req.user.id
     const { query } = req.query;
     const users = await User.findAll({
       where: {

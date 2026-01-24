@@ -5,7 +5,7 @@ const GetOrders = async () => {
   const cookieStores = await cookies();
   const token = cookieStores.get("token")?.value || "";
   try {
-    const res = await fetch("http://localhost:5000/api/user/orders", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/orders`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

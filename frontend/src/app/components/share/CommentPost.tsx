@@ -58,7 +58,7 @@ const CommentPost = ({ postId }: { postId: string }) => {
 
   const GetCommentsByPostId = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/comments/${postId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/comments/${postId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -39,7 +39,7 @@ const ListOrderBusiness = ({
   );
   const [success, setSucess] = useState(false);
   const [error, setError] = useState(false);
-  const imageUrl = "http://localhost:5000/uploads/";
+  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   useEffect(()=>{
     setOrders(ordersBusiness)

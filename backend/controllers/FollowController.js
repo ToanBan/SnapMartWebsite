@@ -6,28 +6,7 @@ const { where, Op } = require("sequelize");
 
 const FollowUser = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
-    const userId = decoded.id;
+    const userId = req.user.id;
     const followId = req.params.id;
 
     const existFollow = await Follow.findOne({
@@ -60,34 +39,13 @@ const FollowUser = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
 const CheckFollow = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
-    const userId = decoded.id;
+    const userId = req.user.id;
     const followId = req.params.id;
 
     const checkFollow = await Follow.findOne({
@@ -107,22 +65,14 @@ const CheckFollow = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
 const CountFollow = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
     const { id } = req.params;
-    const userId = !id || id === "undefined" || id === "null" ? decoded.id : id;
+    const userId = req.user.id;
 
     const follower = await Follow.count({
       where: {
@@ -145,34 +95,13 @@ const CountFollow = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
 const GetFriend = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({
-        message: "Unauthorized",
-      });
-    }
-
-    const decoded = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN,
-      (err, decoded) => {
-        if (err) {
-          if (err.name === "TokenExpiredError") {
-            return res.status(401).json({ message: "Token expired" });
-          }
-          return res.status(403).json({ message: "Invalid token" });
-        }
-        return decoded;
-      }
-    );
-
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     const friends = await Follow.findAll({
       attributes: ["followingId"],
@@ -199,7 +128,7 @@ const GetFriend = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 

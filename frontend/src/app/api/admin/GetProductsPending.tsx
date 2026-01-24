@@ -2,7 +2,7 @@ import React from 'react'
 
 const GetProductsPending = async() => {
   try {
-    const res = await fetch("http://localhost:5000/api/admin/business/products", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/business/products`, {
         method:"GET", 
         credentials:"include", 
         headers:{
