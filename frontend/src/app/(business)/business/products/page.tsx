@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from "react";
 import GetAllProducts from "@/app/api/business/GetAllProducts";
 import Pagination from "@/app/components/share/Pagination";

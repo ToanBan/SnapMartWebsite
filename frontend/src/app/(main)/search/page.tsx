@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import SearchProfileClient from "@/app/components/SearchProfileClient";
 import { cookies } from "next/headers";
 

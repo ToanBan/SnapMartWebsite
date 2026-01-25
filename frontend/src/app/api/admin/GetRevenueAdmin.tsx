@@ -11,7 +11,8 @@ const GetRevenueAdmin = async() => {
         headers:{
             "Content-Type":"application/json",
             Cookie:`token=${token}`
-        }
+        },
+        cache:"no-store"
     })
 
     if(res.ok){

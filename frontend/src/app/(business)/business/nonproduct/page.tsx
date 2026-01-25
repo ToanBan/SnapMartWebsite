@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from "react";
 import GetUnsoldProducts from "@/app/api/business/GetUnsoldProducts";
 import ListNonProductBusiness from "@/app/components/ListNonProductBusiness";

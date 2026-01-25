@@ -48,7 +48,6 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
     });
 
     const data = await res.json();
-    console.log(data);
     sharePosts = data.message;
   } catch (error) {
     console.error(error);

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from "react";
 import GetOrders from "@/app/api/business/GetOrders";
 import Pagination from "@/app/components/share/Pagination";
@@ -10,8 +11,7 @@ const OrderPage = async ({
 }) => {
   const page = Number(searchParams.page) || 1;
   const orders = await GetOrders(page);
-  console.log(page);
-  console.log(orders);
+ 
   return (
     <>
       <div className="container-xl py-5">
