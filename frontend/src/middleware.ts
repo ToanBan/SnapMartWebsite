@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("token")?.value;
 
-  // --- NHÓM 1: KIỂM TRA STEP (QUY TRÌNH QUÊN MẬT KHẨU/ĐĂNG KÝ) ---
+
   if (pathname.startsWith("/verify") || pathname.startsWith("/resetpassword")) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/check-step`, {
       headers: { Cookie: req.headers.get("cookie") || "" },

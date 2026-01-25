@@ -81,39 +81,40 @@ const VerifyOTP = async (req, res, next) => {
     const { otp } = req.body;
     const email = await redisClient.get("email");
     const storedOtp = await redisClient.get(`otp:${email}`);
+
     if (otp !== storedOtp) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
-    const feautes = await redisClient.get("verifyregister");
 
-    if (!feautes) {
+    const isRegister = await redisClient.get("verifyregister");
+    if (!isRegister) {
       const user = await User.findOne({ where: { email, is_verified: true } });
       if (!user) {
-        return res
-          .status(400)
-          .json({ message: "User not found or already verified" });
+        return res.status(400).json({ message: "User not found" });
       }
+
+      await redisClient.set(`forgot:step:${email}`, "verified", { EX: 300 });
+
       await redisClient.del(`otp:${email}`);
-      await redisClient.set("step", "verified", { EX: 300 });
+
       return res.status(200).json({ message: "Redirect ResetPassword" });
-    } else {
-      const user = await User.findOne({ where: { email, is_verified: false } });
-      if (!user) {
-        return res
-          .status(400)
-          .json({ message: "User not found or already verified" });
-      }
-      await user.update({ is_verified: true });
-      await redisClient.del(`otp:${email}`);
-      await redisClient.del("email");
-      await redisClient.del("verifyregister");
-      return res.status(200).json({
-        message: "User verified successfully",
-        feautes: "verifyRegister",
-      });
     }
+
+    const user = await User.findOne({ where: { email, is_verified: false } });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    await user.update({ is_verified: true });
+
+    await redisClient.del(`otp:${email}`);
+    await redisClient.del("verifyregister");
+    await redisClient.del("email");
+    await redisClient.set(`register:step:${email}`, "verified", { EX: 300 });
+    return res.status(200).json({
+      message: "User verified successfully",
+    });
   } catch (error) {
-    console.error(error);
     next(error);
   }
 };
@@ -277,7 +278,7 @@ const CheckRoleUser = async (req, res) => {
   try {
     const token = req.headers.authorization?.split(" ")[1];
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
-    const user = await User.findOne({ where: { id: decoded.id} });
+    const user = await User.findOne({ where: { id: decoded.id } });
     return res.status(200).json({
       message: user.role,
     });
