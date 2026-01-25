@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from 'react'
 import Pagination from '@/app/components/share/Pagination'
 import GetErrors from '@/app/api/admin/GetErrors'

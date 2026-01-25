@@ -1,6 +1,5 @@
-import React from "react";
-import ListProduct from "@/app/components/ListProduct";
-import GetProductApproved from "@/app/api/admin/GetProductApproved";
+export const dynamic = "force-dynamic";
+
 import Chatbot from "@/app/components/Chatbot";
 import SearchProducts from "@/app/components/SearchProducts";
 import PaginationProduct from "@/app/components/PaginationProduct";
