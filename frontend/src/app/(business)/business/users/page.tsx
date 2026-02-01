@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import React from "react";
 import GetUserProducts from "@/app/api/business/GetUserProducts";
 import dayjs from "dayjs";

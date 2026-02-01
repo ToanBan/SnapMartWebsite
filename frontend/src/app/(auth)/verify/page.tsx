@@ -12,25 +12,30 @@ const VerifyPage = () => {
     const otpValue = otp.join("");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/verify-otp`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp: otpValue }),
-        credentials: "include",
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/verify-otp`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ otp: otpValue }),
+          credentials: "include",
+        },
+      );
       const data = await res.json();
-      if (data.feautes === "verifyRegister") {
+      if (data.message == "verifyRegister") {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
           window.location.href = "/login";
         }, 3000);
-      } else {
+      } else if (data.message == "resetpassword") {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
           window.location.href = "/resetpassword";
         }, 3000);
+      } else {
+        window.location.href = "/register";
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
@@ -46,7 +51,6 @@ const VerifyPage = () => {
     setOtp(newOtp);
   };
 
-  
   return (
     <>
       <div

@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
       }
     }
     if (pathname.startsWith("/resetpassword")) {
-      if (step !== "verified") {
+      if (step !== "verifiedresetpassword") {
         return NextResponse.redirect(new URL("/forgot", req.url));
       }
     }

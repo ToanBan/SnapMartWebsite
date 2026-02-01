@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -9,35 +8,32 @@ const Pagination = ({
   page: number;
   pathName: string;
 }) => {
+  const prevPage = Math.max(page - 1, 1);
+  const nextPage = page + 1;
+
   return (
     <>
       <div className="pagination-container d-flex justify-content-center align-items-center py-4 row">
         <nav aria-label="Product navigation">
           <ul className="pagination-modern">
             <Link
-            scroll={false}
-              className="page-item-modern"
-              href={`${pathName}${Math.max(page - 1, 1)}`}
+              scroll={true}
+              className={`page-link-modern prev-next ${page <= 1 ? "disabled-link" : ""}`}
+              href={`${pathName}?page=${prevPage}`}
             >
-              <button
-                className="page-link-modern prev-next"
-                aria-label="Previous page"
-              >
-                <ChevronLeft size={20} />
-              </button>
+              <ChevronLeft size={20} />
             </Link>
 
             <li className="page-item-modern">
-              <button className="page-link-modern active">{page}</button>
+              <span className="page-link-modern active">{page}</span>
             </li>
 
-            <Link scroll={false} className="page-item-modern" href={`${pathName}${page + 1}`}>
-              <button
-                className="page-link-modern prev-next"
-                aria-label="Previous page"
-              >
-                <ChevronRight size={20} />
-              </button>
+            <Link 
+              scroll={true} 
+              className="page-link-modern prev-next" 
+              href={`${pathName}?page=${nextPage}`}
+            >
+              <ChevronRight size={20} />
             </Link>
           </ul>
         </nav>
@@ -85,8 +81,7 @@ const Pagination = ({
             text-decoration: none;
         }
 
-        /* Hiệu ứng Hover */
-        .page-link-modern:hover:not(.dots):not(.active) {
+        .page-link-modern:hover:not(.active):not(.disabled-link) {
             border-color: var(--primary-color);
             color: var(--primary-color);
             transform: translateY(-3px);
@@ -94,7 +89,6 @@ const Pagination = ({
             background: #f5f3ff;
         }
 
-        /* Trạng thái Active */
         .page-link-modern.active {
             background: var(--primary-color);
             border-color: var(--primary-color);
@@ -104,45 +98,18 @@ const Pagination = ({
             z-index: 2;
         }
 
-        /* Nút Previous & Next */
-        .page-link-modern.prev-next {
-            background: #f8fafc;
-            color: var(--text-muted);
+        .disabled-link {
+            opacity: 0.5;
+            pointer-events: none;
+            background: #f1f5f9;
         }
 
-        .page-link-modern.prev-next:hover {
-            background: var(--bg-white);
-            color: var(--primary-color);
-        }
-
-        /* Dấu ba chấm */
-        .page-link-modern.dots {
-            border: none;
-            background: transparent;
-            box-shadow: none;
-            cursor: default;
-            color: var(--text-muted);
-            min-width: 30px;
-        }
-
-        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .pagination-modern {
-                gap: 5px;
-            }
             .page-link-modern {
                 min-width: 38px;
                 height: 38px;
                 font-size: 0.85rem;
                 border-radius: 10px;
-            }
-        }
-
-        /* Tự động ẩn một số trang trên màn hình rất nhỏ để tránh vỡ giao diện */
-        @media (max-width: 480px) {
-            .page-item-modern:nth-child(4),
-            .page-item-modern:nth-child(5) {
-                display: none;
             }
         }
       `}</style>

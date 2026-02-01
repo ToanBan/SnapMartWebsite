@@ -6,7 +6,7 @@ const GetAllProducts = async(page:number) => {
   const token = (await cookieStore).get("token")?.value;
   if(!token) return
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/business/product?page=${page}`, {
+    const res = await fetch(`http://localhost:5000/api/business/product?page=${page}`, {
         method:"GET", 
         headers:{
             "Content-Type":"application/json", 
@@ -16,6 +16,7 @@ const GetAllProducts = async(page:number) => {
 
     if(res.ok){
         const data = await res.json();
+        console.log("Data products business:", data);
         return data.message;
     }
   } catch (error) {

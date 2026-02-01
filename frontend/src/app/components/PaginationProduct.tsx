@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import ListProduct from "./ListProduct";

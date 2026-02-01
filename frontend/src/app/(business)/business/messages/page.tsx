@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import React from "react";
 import { Search, User } from "lucide-react";
 import GetUsesMessages from "@/app/api/business/GetUsesMessages";

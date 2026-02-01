@@ -11,14 +11,13 @@ const PostCreator = () => {
 
   const AddPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget)
+    const formData = new FormData(e.currentTarget);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
         method: "POST",
         credentials: "include",
-        body:formData
+        body: formData,
       });
-  
 
       if (res.ok) {
         setSuccess(true);
@@ -41,13 +40,6 @@ const PostCreator = () => {
     <>
       <div className="post-card p-3 w-100">
         <div className="d-flex align-items-center mb-3">
-          <Image
-            src="https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
-            alt="user-avatar"
-            width={50}
-            height={50}
-            className="rounded-circle me-3"
-          />
           <input
             type="text"
             className="form-control rounded-pill"

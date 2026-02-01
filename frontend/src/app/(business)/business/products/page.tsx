@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import React from "react";
 import GetAllProducts from "@/app/api/business/GetAllProducts";
 import Pagination from "@/app/components/share/Pagination";
@@ -8,27 +7,30 @@ import ListProductBusiness from "@/app/components/ListProductBusiness";
 const ListProducts = async ({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }>; 
 }) => {
-  const page = Number(searchParams.page) || 1;
-  const products = await GetAllProducts(page);
-  return (
-    <>
-      <div
-        className="container-xl py-5"
-        style={{
-          fontFamily: "'Inter', sans-serif",
-          backgroundColor: "#f5f6fa",
-        }}
-      >
-        <ListProductBusiness productsBusiness={products}/>
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
 
-        <Pagination
-          page={page}
-          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/business/products?page=`}
-        />
-      </div>
-    </>
+  console.log("Business Products Page number:", page);
+  const products = await GetAllProducts(page);
+
+  return (
+    <div
+      className="container-xl py-5"
+      style={{
+        fontFamily: "'Inter', sans-serif",
+        backgroundColor: "#f5f6fa",
+      }}
+    >
+      <ListProductBusiness productsBusiness={products} />
+
+      <Pagination
+        page={page}
+        // Truyền path sạch, tham số query sẽ nối trong component
+        pathName="/business/products" 
+      />
+    </div>
   );
 };
 

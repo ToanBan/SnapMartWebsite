@@ -29,19 +29,16 @@ const ListProduct = ({ products }: { products: any }) => {
 
   return (
     <>
-      
-
       {products && products.length > 0 ? (
         products.map((product: any) => (
           <div className="col" key={product.id}>
             <div className="card product-card rounded-3 shadow-sm h-100">
               <div className="position-relative overflow-hidden rounded-top-3">
-                <Image
+                <img
+                style={{width:"200px", height:"150px"}}
+                  className="card-img-top"
                   src={`${imageUrl}${product.image}`}
                   alt={product.productName}
-                  width={200}
-                  height={200}
-                  className="card-img-top"
                 />
 
                 <span className="badge text-bg-danger position-absolute top-0 start-0 m-2 fw-bold">

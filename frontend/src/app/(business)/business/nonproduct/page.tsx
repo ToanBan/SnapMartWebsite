@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import React from "react";
 import GetUnsoldProducts from "@/app/api/business/GetUnsoldProducts";
 import ListNonProductBusiness from "@/app/components/ListNonProductBusiness";
@@ -6,9 +5,10 @@ import Pagination from "@/app/components/share/Pagination";
 const NonProduct = async ({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }> | { page?: string }; 
 }) => {
-  const page = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
 
   const data = await GetUnsoldProducts(page);
   return (
@@ -49,7 +49,7 @@ const NonProduct = async ({
 
         <Pagination
           page={page}
-          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/business/nonproduct?page=`}
+          pathName={`/business/nonproduct`}
         />
       </div>
 

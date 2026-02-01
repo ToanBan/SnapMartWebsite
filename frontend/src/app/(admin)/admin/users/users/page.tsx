@@ -5,18 +5,19 @@ import GetAllUsersAdmin from "@/app/api/admin/GetAllUsersAdmin";
 const UsersPage = async ({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }> | { page?: string };
 }) => {
-  const page = Number(searchParams.page) || 1;
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
   const users = await GetAllUsersAdmin(page);
 
   return (
     <>
-      <div style={{width:"100%"}}>
+      <div style={{ width: "100%" }}>
         <ListAllUsersAdmin usersData={users} />
         <Pagination
           page={page}
-          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/users/users?page=`}
+          pathName="/admin/users/users"
         />
       </div>
     </>

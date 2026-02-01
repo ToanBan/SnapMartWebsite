@@ -5,10 +5,10 @@ import Pagination from "@/app/components/share/Pagination";
 const PostsPage = async ({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: Promise<{ page?: string }> | { page?: string };
 }) => {
-  const page = Number(searchParams.page) || 1;
-
+  const params = await searchParams;
+  const page = Number(params.page) || 1;
 
   const posts = await GetPostsAdmin(page);
   
@@ -18,7 +18,7 @@ const PostsPage = async ({
         <ListPostsAdmin dataPosts={posts} />
         <Pagination
           page={page}
-          pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/admin/users/posts?page=`}
+          pathName="/admin/users/posts"
         />
       </div>
     </>

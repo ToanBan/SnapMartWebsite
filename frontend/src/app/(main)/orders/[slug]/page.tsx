@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic";
 import React from "react";
 import GetOrdersDetail from "@/app/api/users/GetOrderDetail";
 import Image from "next/image";

@@ -14,19 +14,17 @@ const ProductDetail = async ({
 
   return (
     <>
-      <TrackProductView productId={slug}/>
+      <TrackProductView productId={slug} />
       <div
         className={`product-container p-4 p-md-5 ${styles.productContainer}`}
       >
         <div className="container">
           <div className="row g-5">
             <div className="col-md-6 text-center">
-              <Image
+              <img
+                className={`main-image w-100 mb-3 shadow-sm ${styles.mainImage}`}
                 src={`${imageUrl}${product.image}`}
                 alt={product.productName}
-                width={500}
-                height={500}
-                className={`main-image w-100 mb-3 shadow-sm ${styles.mainImage}`}
               />
             </div>
 
@@ -37,16 +35,16 @@ const ProductDetail = async ({
 
               <div className="bg-light p-3 rounded-lg mb-4">
                 <p className="text-muted text-decoration-line-through mb-1">
-                  {/* {product.price.toLocaleString("vi-VN", {
+                  {product.price.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
-                })} */}
+                })}
                 </p>
                 <span className={styles.priceHuge}>
-                  {/* {product.price.toLocaleString("vi-VN", {
+                  {product.price.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
-                })} */}
+                })}
                 </span>
                 <span className="badge bg-danger ms-2 align-middle fs-6">
                   GIẢM 20%

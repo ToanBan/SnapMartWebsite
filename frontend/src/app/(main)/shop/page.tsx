@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import Chatbot from "@/app/components/Chatbot";
 import SearchProducts from "@/app/components/SearchProducts";
 import PaginationProduct from "@/app/components/PaginationProduct";

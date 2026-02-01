@@ -93,11 +93,11 @@ const VerifyOTP = async (req, res, next) => {
         return res.status(400).json({ message: "User not found" });
       }
 
-      await redisClient.set(`forgot:step:${email}`, "verified", { EX: 300 });
+      await redisClient.set("step", "verifiedresetpassword", { EX: 300 });
 
       await redisClient.del(`otp:${email}`);
 
-      return res.status(200).json({ message: "Redirect ResetPassword" });
+      return res.status(200).json({ message: "resetpassword" });
     }
 
     const user = await User.findOne({ where: { email, is_verified: false } });
@@ -107,12 +107,12 @@ const VerifyOTP = async (req, res, next) => {
 
     await user.update({ is_verified: true });
 
+    await redisClient.set("step", "verified", { EX: 300 });
     await redisClient.del(`otp:${email}`);
     await redisClient.del("verifyregister");
-    await redisClient.del("email");
-    await redisClient.set(`register:step:${email}`, "verified", { EX: 300 });
+
     return res.status(200).json({
-      message: "User verified successfully",
+      message: "verifyRegister",
     });
   } catch (error) {
     next(error);

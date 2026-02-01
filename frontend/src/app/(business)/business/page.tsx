@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import React from "react";
 import GetRevenue from "@/app/api/business/GetRevenue";
 import Dashboard from "@/app/components/Dashboard";
