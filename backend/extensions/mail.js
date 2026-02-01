@@ -1,18 +1,16 @@
 const nodemailer = require("nodemailer");
 
-console.log("SMTP_HOST:", process.env.SMTP_HOST);
-console.log("EMAIL:", process.env.APP_USER_EMAIL);
-console.log("PASS:", process.env.APP_PASSWORD ? "OK" : "MISSING");
+
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST, // ví dụ: smtp.gmail.com
+  host: process.env.SMTP_HOST, 
   port: 587,
-  secure: false, // true nếu port 465
+  secure: false, 
   auth: {
-    user: process.env.APP_USER_EMAIL, // email gửi
-    pass: process.env.APP_PASSWORD, // app password
+    user: process.env.APP_USER_EMAIL,
+    pass: process.env.APP_PASSWORD, 
   },
-  connectionTimeout: 10000, // tránh timeout khi deploy
+  connectionTimeout: 10000, 
 });
 
 async function sendMail(to, subject, text) {

@@ -58,11 +58,15 @@ const RegisterAccount = async (req, res, next) => {
     await redisClient.set(`otp:${email}`, otp, {
       EX: 300,
     });
-    await sendMail(
-      email,
-      "Xác thực OTP đề đăng ký tài khoản",
-      `Ma OTP của bạn là ${otp}`,
-    );
+    try {
+      await sendMail(
+        email,
+        "Xác thực OTP để đăng ký tài khoản",
+        `Mã OTP của bạn là ${otp}`,
+      );
+    } catch (mailError) {
+      console.warn("Send mail failed, but user still registered");
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       username,
@@ -126,7 +130,7 @@ const LoginAccount = async (req, res, next) => {
       return res.status(400).json({ message: "All fields are required" });
     }
     const user = await User.findOne({
-      where: { email, is_verified: true, status: "active" },
+      where: { email, status: "active" },
     });
     if (!user) {
       return res.status(400).json({ message: "Account does not exist" });
