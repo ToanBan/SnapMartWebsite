@@ -44,6 +44,28 @@ const ListSuggestionProducts = () => {
   };
   return (
     <>
+      {products.length > 0 && (
+        <div className="mb-5 text-center">
+          <h2 className="fw-bold display-6 text-dark">
+            Sản Phẩm Dành Riêng Cho Bạn
+          </h2>
+
+          <p className="text-muted mt-2">
+            Được gợi ý dựa trên hành vi và sở thích của bạn
+          </p>
+
+          <div className="d-flex justify-content-center mt-3">
+            <span
+              className="bg-primary"
+              style={{
+                width: "120px",
+                height: "4px",
+                borderRadius: "999px",
+              }}
+            ></span>
+          </div>
+        </div>
+      )}
       <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-md-4">
         {products && products.length > 0 ? (
           products.map((product: any) => (

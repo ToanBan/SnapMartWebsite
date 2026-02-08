@@ -108,16 +108,10 @@ const ProfileHeader = ({
     SendNotification(profileId, type, content);
   };
 
-  console.log("status", statusFollow);
-
   return (
     <div className="profile-header d-flex flex-column align-items-center text-center">
       <Image
-        src={
-          account?.avatar
-            ? `${imageUrl}${account?.avatar}`
-            : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
-        }
+        src={`${account.avatar ? `${imageUrl}${account.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
         alt="avatar-profile"
         width={70}
         height={70}

@@ -5,12 +5,12 @@ import TrackProductSearch from "@/app/components/TrackProductSearch";
 const DisplayProductBySearch = async ({
   searchParams,
 }: {
-  searchParams: { query?: string, page?:string};
+  searchParams: { query?: string; page?: string };
 }) => {
-  const query = searchParams.query || "";
-  const page = searchParams.page || "";
-  let SearchPage = Number(page)
-
+  const resolvedSearchParams = await searchParams;
+  const query = resolvedSearchParams.query || "";
+  const page = resolvedSearchParams.page || 1;
+  let SearchPage = Number(page);
 
   let data = [];
   if (query) {
@@ -20,7 +20,7 @@ const DisplayProductBySearch = async ({
 
   return (
     <>
-      <TrackProductSearch query={query}/>
+      <TrackProductSearch query={query} />
       <div style={{ marginTop: "12rem" }}>
         <div className="container">
           <div className="text-center mb-4 mb-md-5">
@@ -38,10 +38,13 @@ const DisplayProductBySearch = async ({
             <hr className="w-25 mx-auto mt-4 opacity-25" />
           </div>
 
-          <PaginationProduct dataSearch={data} pathName={`/search/products?query=${query}&page=`} page={SearchPage}/>
+          <PaginationProduct
+            dataSearch={data}
+            pathName={`/search/products?query=${query}&page=`}
+            page={SearchPage}
+          />
         </div>
       </div>
-
     </>
   );
 };

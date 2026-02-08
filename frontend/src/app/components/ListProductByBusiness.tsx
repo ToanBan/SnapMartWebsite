@@ -2,6 +2,7 @@ import React from "react";
 import Pagination from "./share/Pagination";
 import Image from "next/image";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 interface ProductProps {
   id: string;
   productName: string;
@@ -10,7 +11,15 @@ interface ProductProps {
   image: string;
 }
 
-const ListProductByBusiness = ({ products, shopId, page}: { products: ProductProps[], shopId:string, page:number}) => {
+const ListProductByBusiness = ({
+  products,
+  shopId,
+  page,
+}: {
+  products: ProductProps[];
+  shopId: string;
+  page: number;
+}) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   console.log(products);
   return (
@@ -24,28 +33,34 @@ const ListProductByBusiness = ({ products, shopId, page}: { products: ProductPro
             {products.length > 0 ? (
               products.map((product, index) => (
                 <div key={index} className="col-md-6 col-lg-3">
-                  <div className="product-card shadow-sm">
-                    <div className="product-img-wrapper">
-                      <Image
-                        src={`${imageUrl}${product.image}`}
-                        alt={`${product.productName}`}
-                        width={250}
-                        height={250}
-                      ></Image>
-                    </div>
-                    <div className="p-4">
-                      <h5 className="fw-bold mb-2">{product.productName}</h5>
-                      <p className="text-muted small">{product.description}</p>
-                      <div className="d-flex justify-content-between align-items-center mt-3">
-                        <span className="fw-bold text-primary fs-5">
-                          {product.price} VND
-                        </span>
-                        <button className="btn btn-sm btn-outline-primary">
-                          <Plus size={24} />
-                        </button>
+                  <Link className="text-decoration-none text-dark" href={`/shop/product/${product.id}`}>
+                    <div className="product-card shadow-sm">
+                      <div className="product-img-wrapper">
+                        <img
+                          style={{
+                            width: "250px",
+                            height: "250px",
+                          }}
+                          src={`${imageUrl}${product.image}`}
+                          alt={`${product.productName}`}
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h5 className="fw-bold mb-2">{product.productName}</h5>
+                        <p className="text-muted small">
+                          {product.description}
+                        </p>
+                        <div className="d-flex justify-content-between align-items-center mt-3">
+                          <span className="fw-bold text-primary fs-5">
+                            {product.price} VND
+                          </span>
+                          <button className="btn btn-sm btn-outline-primary">
+                            <Plus size={24} />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               ))
             ) : (
@@ -55,7 +70,10 @@ const ListProductByBusiness = ({ products, shopId, page}: { products: ProductPro
         </div>
       </section>
 
-      <Pagination page={page} pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/shop/${shopId}?page=`} />
+      <Pagination
+        page={page}
+        pathName={`${process.env.NEXT_PUBLIC_API_URL_FE}/shop/${shopId}?page=`}
+      />
     </>
   );
 };

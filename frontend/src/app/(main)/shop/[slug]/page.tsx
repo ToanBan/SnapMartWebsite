@@ -44,19 +44,17 @@ const ShopOfBusiness = async ({
               </div>
             </div>
             <div className="col-lg-6 text-center">
-              <Image
-                src={`${imageUrl}${data.verificationDocument}`}
-                alt={`${data.businessName}`}
-                width={500}
-                height={400}
+              <img
                 className="img-fluid hero-image"
-              ></Image>
+                alt={`${data.businessName}`}
+                src={`${imageUrl}${data.verificationDocument}`}
+              />
             </div>
           </div>
         </div>
       </section>
 
-      <ListProductByBusiness products={products} shopId={slug} page={page}/>
+      <ListProductByBusiness products={products} shopId={slug} page={page} />
 
       <ChatBusiness businessId={slug} />
 

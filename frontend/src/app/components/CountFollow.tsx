@@ -17,6 +17,7 @@ const CountFollow = async (userId?:string) => {
       },
     });
 
+    
     const data = await res.json();
     return data;
   } catch (error) {

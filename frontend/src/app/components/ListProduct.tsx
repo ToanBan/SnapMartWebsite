@@ -68,7 +68,7 @@ const ListProduct = ({ products }: { products: any }) => {
                 </p>
 
                 <div className="d-flex flex-column gap-2">
-                  <Link href={`shop/product/${product.id}`}>
+                  <Link href={`/shop/product/${product.id}`}>
                     <button className="btnDetail">XEM CHI TIẾT</button>
                   </Link>
                   <button

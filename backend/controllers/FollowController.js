@@ -91,7 +91,7 @@ const CountFollow = async (req, res, next) => {
       following,
       userId,
       message: userId,
-      test: decoded.id,
+    
     });
   } catch (error) {
     console.error(error);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import ReactionPost from "./ReactionPost";
@@ -69,8 +69,9 @@ const PostProfile = ({
     }
   };
 
-  const fetchPostsMore = async () => {
-    if (loading || !hasMore) return;
+  const fetchPostsMore = useCallback(async () => {
+    if (loading || !hasMore || privacy !== "friends") return;
+
     try {
       setLoading(true);
       const res = await fetch(
@@ -78,16 +79,23 @@ const PostProfile = ({
         {
           method: "GET",
           credentials: "include",
-        }
+        },
       );
 
       if (!res.ok) return;
       const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        setPosts((prev) => {
+          const newPosts = data.data.filter(
+            (newPost: PostProps) => prev.some((p) => p.id !== newPost.id),
+          );
+          return [...prev, ...newPosts];
+        });
 
-      setPosts((prev) => [...prev, ...data.data]);
-      if (data.nextCursor) {
         setCursor(data.nextCursor);
-      } else {
+      }
+
+      if (!data.nextCursor || data.data.length === 0) {
         setHasMore(false);
       }
     } catch (error) {
@@ -95,29 +103,24 @@ const PostProfile = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [cursor, hasMore, loading, privacy]);
 
   useEffect(() => {
     if (privacy !== "friends") {
-      console.log("⛔ Privacy !== friends → không setup observer");
+      console.log("Privacy !== friends → không setup observer");
       return;
     }
 
     if (!observerRef.current) {
-      console.log("❌ observerRef chưa có");
+      console.log("observerRef chưa có");
       return;
     }
 
-    console.log("🟢 Setup IntersectionObserver (friends)");
+    console.log("Setup IntersectionObserver (friends)");
 
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        console.log("......", entries)
-        console.log("111111", entry);
-        console.log("👀 Observer fired | friends");
-        console.log("➡️ isIntersecting:", entry.isIntersecting);
-
         if (entry.isIntersecting) {
           fetchPostsMore();
         }
@@ -126,13 +129,13 @@ const PostProfile = ({
         root: null,
         rootMargin: "200px",
         threshold: 0,
-      }
+      },
     );
 
     observer.observe(observerRef.current);
 
     return () => {
-      console.log("🧹 Cleanup observer");
+      console.log("Cleanup observer");
       observer.disconnect();
     };
   }, [privacy, cursor, hasMore]);
@@ -148,13 +151,11 @@ const PostProfile = ({
           marginTop: "120px",
         }}
       >
-
-        <PostCreator/>
+        <PostCreator />
         {privacy === "friends" &&
           Array.isArray(posts) &&
           posts.map((post, index) => (
             <div className="post-card" key={index}>
-              {/* ===== HEADER ===== */}
               <div className="d-flex align-items-center justify-content-between post-header">
                 <div className="d-flex align-items-center">
                   <Image
@@ -162,7 +163,7 @@ const PostProfile = ({
                     alt="avatar"
                     width={50}
                     height={50}
-                    src={`${imageUrl}${post.user.avatar}`}
+                    src={`${post.user.avatar ? `${imageUrl}${post.user.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
                   />
                   <div>
                     <h5 className="username">{post.user.username}</h5>
@@ -262,7 +263,7 @@ const PostProfile = ({
             </div>
           ))}
         <div ref={observerRef} style={{ height: "1px" }} />
-          
+
         {privacy == "public" &&
           Array.isArray(postsPublic) &&
           postsPublic.map((post) => (
@@ -295,7 +296,6 @@ const PostProfile = ({
           ))}
       </div>
 
-     
       <div className="fixed-top-right">
         <div className="dropdown">
           <button

@@ -23,9 +23,10 @@ const SearchProfileClient = ({
     const fetchProfiles = async () => {
       if (query) {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/search/profile?query=${query}`, {
-            credentials:"include"
-          }, 
+          `${process.env.NEXT_PUBLIC_API_URL}/api/search/profile?query=${query}`,
+          {
+            credentials: "include",
+          },
         );
         const data = await res.json();
         setProfiles(Array.isArray(data.message) ? data.message : []);
@@ -38,7 +39,7 @@ const SearchProfileClient = ({
   }, [query]);
   const RedirectToProfileDetail = (
     e: React.MouseEvent<HTMLButtonElement>,
-    profileId: string
+    profileId: string,
   ) => {
     e.preventDefault();
     if (profileId) {
@@ -46,6 +47,7 @@ const SearchProfileClient = ({
     }
   };
 
+  
 
   return (
     <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
@@ -58,11 +60,7 @@ const SearchProfileClient = ({
                 height={50}
                 className="img-fluid rounded-circle mb-4 mx-auto"
                 style={{ width: "112px", height: "112px", objectFit: "cover" }}
-                src={
-                  profile?.avatar
-                    ? `${imageUrl}${profile.avatar}`
-                    : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
-                }
+                src={`${profile.avatar ? `${imageUrl}${profile.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
                 alt="avatar-profile"
               />
               <h3 className="h5 fw-bold text-dark mb-4">{profile.username}</h3>
@@ -90,7 +88,7 @@ const SearchProfileClient = ({
               fontStyle: "italic",
             }}
           >
-            KHÔNG TÌM THẤY HỒ SƠ CÁ NHÂN
+            KHÔNG TÌM THẤY HỒ SƠ
           </p>
         </div>
       )}

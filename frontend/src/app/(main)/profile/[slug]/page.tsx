@@ -6,18 +6,25 @@ import CountFollow from "@/app/components/CountFollow";
 import SharePost from "@/app/components/SharePost";
 import Posts from "@/app/components/Post";
 const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
+  const { slug } = await params;
+
   let initialData;
   let posts = [];
   let sharePosts = [];
   try {
     if (slug) {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/${slug}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/profile/${slug}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      }).then((data) => data.json());
+      ).then((data) => {
+        console.log("dataa", data);
+        return data.json();
+      });
 
       const resPost = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/user/posts/${slug}`,
@@ -26,7 +33,7 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       ).then((data) => data.json());
 
       const [profileData, postData] = await Promise.all([res, resPost]);
@@ -39,15 +46,19 @@ const ProfileDetail = async ({ params }: { params: { slug: string } }) => {
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/share/${slug}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        userID: slug,
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/posts/share/${slug}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          userID: slug,
+        },
       },
-    });
+    );
 
     const data = await res.json();
+    console.log(data);
     sharePosts = data.message;
   } catch (error) {
     console.error(error);

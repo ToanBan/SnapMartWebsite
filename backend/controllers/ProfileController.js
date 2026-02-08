@@ -11,7 +11,6 @@ const GetProfileDetail = async (req, res, next) => {
     const user = await User.findOne({
       where: {
         id: id,
-        is_verified: true,
       },
     });
 

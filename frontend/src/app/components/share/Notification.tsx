@@ -9,10 +9,6 @@ import ReadNotification from "@/app/api/users/ReadNotification";
 const DisplayNotification = () => {
   const notifications = useNotifications();
 
-  useEffect(() => {
-    console.log(notifications);
-  }, [notifications]);
-
   return (
     <>
       <style jsx>{`

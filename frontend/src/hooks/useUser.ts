@@ -9,7 +9,7 @@ const fetcher = async (url: string) => {
 
 export const useUser = (initialData?: any) => {
   const { data, mutate, error } = useSWR(
-    "http://localhost:5000/api/user",
+    `${process.env.NEXT_PUBLIC_API_URL}/api/user`,
     fetcher,
     {
       fallbackData: initialData,

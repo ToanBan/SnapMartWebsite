@@ -4,6 +4,7 @@ import ListProduct from "./ListProduct";
 import GetProductApproved from "../api/admin/GetProductApproved";
 const PaginationProduct = async ({ page, pathName, dataSearch}: { page: number, pathName:string, dataSearch?:any}) => {
   const products = await GetProductApproved(page);
+  console.log("page", page);
   return (
     <>
       <div className="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-md-4">

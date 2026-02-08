@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 module.exports = {
   development: {
@@ -6,7 +6,7 @@ module.exports = {
     password: "0393146946",
     database: "snapmartdb",
     host: "127.0.0.1",
-    dialect: "mysql"
+    dialect: "mysql",
   },
 
   test: {
@@ -14,7 +14,7 @@ module.exports = {
     password: "0393146946",
     database: "database_test",
     host: "127.0.0.1",
-    dialect: "mysql"
+    dialect: "mysql",
   },
 
   production: {
@@ -27,8 +27,16 @@ module.exports = {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false
-      }
-    }
-  }
+        rejectUnauthorized: false,
+      },
+    },
+  },
+
+  local: {
+    username: "root",
+    password: "0393146946",
+    database: "snapmartdb",
+    host: "127.0.0.1",
+    dialect: "mysql",
+  },
 };

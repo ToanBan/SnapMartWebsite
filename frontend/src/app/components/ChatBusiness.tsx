@@ -26,6 +26,7 @@ const ChatBusiness = ({ businessId }: { businessId: string }) => {
 
   const fetchMessages = async () => {
     const data = await GetMessagesBusiness();
+    if(!data) return;
     setMessages((prev) => [...prev, ...data]);
   };
 
