@@ -20,8 +20,6 @@ class EmbedRequest(BaseModel):
 
 @app.post("/embed/product")
 def embed_product(data: EmbedRequest):
-    print("🔥 RECEIVED:", data)
-
     text = f"{data.name}. {data.description}"
     vector = model.encode(text)
     vec_bytes = np.array(vector, dtype=np.float32).tobytes()

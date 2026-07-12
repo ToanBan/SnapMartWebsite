@@ -82,12 +82,12 @@ const ListOrderBusiness = ({
           </tr>
         </thead>
         <tbody>
-          {orders.length === 0 ? (
+          {orders?.length === 0 ? (
             <tr>
               <td colSpan={8}>Chưa có sản phẩm nào.</td>
             </tr>
           ) : (
-            orders.map((order, index) => (
+            orders?.map((order, index) => (
               <tr key={order.id}>
                 <td>{index + 1}</td>
                 <td>{order.user.username}</td>

@@ -92,6 +92,14 @@ const PostCreator = () => {
                     placeholder="What's on your mind?"
                     name="post_title"
                   />
+                  <select
+                    className="form-select mb-3"
+                    name="privacy"
+                    defaultValue="public"
+                  >
+                    <option value="public">🌍 Công khai</option>
+                    <option value="friends">👥 Bạn bè</option>
+                  </select>
                   <input
                     type="file"
                     className="form-control"

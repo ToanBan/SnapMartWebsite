@@ -193,18 +193,18 @@ const ListCart = ({ carts }: { carts: any }) => {
 
               {/* Ảnh */}
               <div className="col-md-3 col-11">
-                <Image
+                <img
                   className="img-fluid d-none d-md-block"
                   width={300}
                   height={300}
                   alt={cartItem.product.productName}
                   src={`${imageUrl}${cartItem.product.image}`}
                 />
-                <img
+                {/* <img
                   src="https://i.ibb.co/TTnzMTf/Rectangle-21.png"
                   alt="Product"
                   className="img-fluid d-md-none"
-                />
+                /> */}
               </div>
 
               {/* Thông tin */}

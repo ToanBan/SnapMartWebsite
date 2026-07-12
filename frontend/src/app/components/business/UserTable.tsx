@@ -69,7 +69,7 @@ const UserTable = ({ data }: { data: DataProps[] }) => {
                 </tr>
               </thead>
               <tbody>
-                {data.length > 0 ? (
+                {data?.length > 0 ? (
                   data.map((item: DataProps) => (
                     <tr key={item.id}>
                       <td>
@@ -93,7 +93,7 @@ const UserTable = ({ data }: { data: DataProps[] }) => {
                     </tr>
                   ))
                 ) : (
-                  <p></p>
+                  <p>{""}</p>
                 )}
               </tbody>
             </table>

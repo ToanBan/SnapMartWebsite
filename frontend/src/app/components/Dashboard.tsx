@@ -52,7 +52,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                   className="d-flex justify-content-center align-items-center"
                   style={{ height: "30rem" }}
                 >
-                  <RevenueChart data={data.monthlyAllRevenue} />
+                  <RevenueChart data={data?.monthlyAllRevenue} />
                 </div>
               </div>
             </div>
@@ -65,7 +65,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                 <div className="icon-box bg-products">
                   <Box size={24} color="white" strokeWidth={2.5} />
                 </div>
-                <div className="stat-value">{data.countProduct}</div>
+                <div className="stat-value">{data?.countProduct}</div>
                 <div className="stat-label">Tổng sản phẩm</div>
                 <div className="mt-3">
                   <span className="trend-badge trend-up">
@@ -83,7 +83,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                 <div className="icon-box bg-sold">
                   <ShoppingCart size={24} color="white" strokeWidth={2.5} />
                 </div>
-                <div className="stat-value">{data.countOrder}</div>
+                <div className="stat-value">{data?.countOrder}</div>
                 <div className="stat-label">Số lượng sản phẩm đã mua</div>
                 <div className="mt-3">
                   <span className="trend-badge trend-up">Tốc độ bán tốt</span>
@@ -99,7 +99,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                 <div className="icon-box bg-customers">
                   <Users size={24} color="white" strokeWidth={2.5} />
                 </div>
-                <div className="stat-value">{data.countBuyer}</div>
+                <div className="stat-value">{data?.countBuyer}</div>
                 <div className="stat-label">Khách hàng đã mua</div>
                 <div className="mt-3">
                   <span className="trend-badge trend-up">
@@ -118,7 +118,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                   <DollarSign size={24} color="white" strokeWidth={2.5} />
                 </div>
                 <div className="stat-value text-primary">
-                  ${Number(data.totalRevenue).toLocaleString("vi-VN")}
+                  ${Number(data?.totalRevenue).toLocaleString("vi-VN")}
                 </div>
                 <div className="stat-label">Tổng doanh số</div>
                 <div className="mt-3">
@@ -136,7 +136,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                   <TrendingUp size={24} color="white" strokeWidth={2.5} />
                 </div>
                 <div className="stat-value">
-                  ${Number(data.monthlyRevenue).toLocaleString("vi-VN")}
+                  ${Number(data?.monthlyRevenue).toLocaleString("vi-VN")}
                 </div>
                 <div className="stat-label">Doanh số tháng hiện tại</div>
                 <div className="mt-3 d-flex align-items-center">
@@ -164,7 +164,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                   <Clock size={24} color="white" strokeWidth={2.5} />
                 </div>
                 <div className="stat-value text-warning">
-                  {data.countOrderNotDelivered}
+                  {data?.countOrderNotDelivered}
                 </div>
                 <div className="stat-label">Đang xử lý / Chờ giao</div>
                 <p className="mt-3 mb-0 small text-muted">
@@ -182,7 +182,7 @@ const Dashboard = ({ data, isAdmin }: { data: any; isAdmin?: boolean }) => {
                   <Archive size={24} color="white" strokeWidth={2.5} />
                 </div>
                 <div className="stat-value text-danger">
-                  {data.unsoldProductCount}
+                  {data?.unsoldProductCount}
                 </div>
                 <div className="stat-label">Sản phẩm chưa được mua</div>
                 <div className="mt-3">

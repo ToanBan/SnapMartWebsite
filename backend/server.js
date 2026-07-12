@@ -10,14 +10,15 @@ const app = express();
 const server = http.createServer(app);
 const fs = require("fs");
 require("dotenv").config();
+require("./schedule/autoSchedule");
 const { CheckUserAuthencation } = require("./middleware/checkAuthencation");
 const { CheckAdmin } = require("./middleware/checkAdmin");
 const errorLogger = require("./middleware/errorLogger");
 const {
   InsertProducts,
   exportProductsJson,
-  RecommendByCBF,
-  SuggestionProduct,
+  TrackUserAction,
+  GetRecommendations,
 } = require("./controllers/SuggestionController");
 
 const io = new Server(server, {
@@ -103,6 +104,7 @@ const {
   DeletePostUser,
   EditPostUser,
   GetPostsFollow,
+  GetPostsPublic,
   FakePostForUser,
   SharePost,
   GetSharePost,
@@ -281,6 +283,7 @@ app.post("/api/follow/:id", CheckUserAuthencation, FollowUser);
 app.get("/api/follow/:id", CheckUserAuthencation, CheckFollow);
 app.get("/api/user/follow/:id", CheckUserAuthencation, CountFollow);
 app.get("/api/posts/follow", CheckUserAuthencation, GetPostsFollow);
+app.get("/api/posts/public",GetPostsPublic);
 app.post("/api/post/reaction", CheckUserAuthencation, ToggleReaction);
 app.get(
   "/api/post/check_reaction/:id",
@@ -337,7 +340,7 @@ app.get("/api/user/orders/:id", CheckUserAuthencation, GetOrderDetailByUser);
 app.post("/api/user/receive-order", CheckUserAuthencation, ReceiveOrderByUser);
 app.post("/api/chatbot", CheckUserAuthencation, ResponseToUser);
 app.post("/api/products", SearchProductByUser);
-app.post("/api/send-action", CheckUserAuthencation, RecommendByCBF);
+app.post("/api/send-action", CheckUserAuthencation, TrackUserAction);
 app.get("/api/users/products", CheckUserAuthencation, GetUserProducts);
 app.get("/api/business/revenue", CheckUserAuthencation, GetRevenue);
 app.get(
@@ -363,11 +366,27 @@ app.get("/api/admin/orders", CheckAdmin, GetOrdersAdmin);
 app.post("/api/posts/report/:id", CheckUserAuthencation, ReportPost);
 app.post("/api/admin/posts/change-status", CheckAdmin, ChangeStatusPost);
 app.get("/api/admin/errors", CheckAdmin, GetErrors);
-app.post("/api/hello", CheckUserAuthencation, SuggestionProduct);
+app.post("/api/hello", CheckUserAuthencation, GetRecommendations);
 app.post("/api/upload-file", upload.single("fileName"), UploadFile);
 app.get("/uploads/api/download/:filename", DownloadFile);
 app.get("/api/notifications", CheckUserAuthencation, GetNotification);
 app.use(errorLogger);
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const rabbitmq = require("./extensions/rabbitmq");
+server.listen(PORT, async () => {
+  try {
+    await rabbitmq.connect();
+    console.log(`Server is running on port ${PORT}`);
+  } catch (error) {
+    console.error("Failed to initialize RabbitMQ:", error);
+  }
+});
+
+// Xử lý Graceful Shutdown
+process.on("SIGINT", async () => {
+  await rabbitmq.close();
+  process.exit(0);
+});
+process.on("SIGTERM", async () => {
+  await rabbitmq.close();
+  process.exit(0);
 });

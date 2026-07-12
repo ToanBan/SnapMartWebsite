@@ -43,16 +43,29 @@ const exportProductsJson = async () => {
     attributes: ["id", "productName", "description"],
   });
 
-  const dataForPython = products.map((p) => ({
-    id: p.id,
-    text: `${p.productName} ${p.description}`,
-  }));
+  // Kiểm tra Redis để lọc chỉ sản phẩm mới (chưa có vector)
+  const newProducts = [];
+  for (const p of products) {
+    const exists = await redisClient.exists(`product:${p.id}`);
+    if (!exists) {
+      newProducts.push({
+        id: p.id,
+        text: `${p.productName} ${p.description || ""}`,
+      });
+    }
+  }
+
+  if (newProducts.length === 0) {
+    console.log("[Embedding] Không có sản phẩm mới cần xử lý.");
+    return 0;
+  }
 
   fs.writeFileSync(
     "data/products_for_embeddings.json",
-    JSON.stringify(dataForPython, null, 2)
+    JSON.stringify(newProducts, null, 2)
   );
-  console.log("Exported products for embedding:", dataForPython.length);
+  console.log(`[Embedding] Đã ghi ${newProducts.length} sản phẩm mới vào file JSON.`);
+  return newProducts.length;
 };
 
 const ACTION_WEIGHT = {
@@ -62,113 +75,57 @@ const ACTION_WEIGHT = {
   "buy-products": 6,
 };
 
-const RecommendByCBF = async (req, res, next) => {
+const rabbitmq = require("../extensions/rabbitmq");
+
+const TrackUserAction = async (req, res, next) => {
   try {
     const userId = String(req.user.id);
     const { actions } = req.body;
+    
     if (!Array.isArray(actions)) {
       return res.status(400).json({ message: "actions must be an array" });
     }
-    let userText = [];
-    for (const act of actions) {
-      const weight = ACTION_WEIGHT[act.type] || 1;
 
-      if (Array.isArray(act.productIds)) {
-        for (const pid of act.productIds) {
-          const product = await Product.findByPk(pid);
-          if (product) {
-            for (let i = 0; i < weight; i++) {
-              userText.push(
-                `${product.productName} ${product.description || ""}`
-              );
-            }
-          }
-        }
-      }
-      if (act.productId) {
-        const product = await Product.findByPk(act.productId);
-        if (product) {
-          for (let i = 0; i < weight; i++) {
-            userText.push(
-              `${product.productName} ${product.description || ""}`
-            );
-          }
-        }
-      }
-
-      if (act.type === "search" && act.query) {
-        for (let i = 0; i < weight; i++) {
-          userText.push(act.query);
-        }
-      }
-    }
-
-    if (userText.length === 0) {
-      return res.json({ recommendProductIds: [] });
-    }
-    const finalText = userText.join(" ");
-    const python = spawn("python", [pythonPath, finalText]);
-    let output = "";
-    let errorOutput = "";
-    python.stdout.on("data", (data) => {
-      output += data.toString();
+    await rabbitmq.publishToQueue("user_actions", {
+      userId: userId,
+      actions: actions
     });
 
-    python.stderr.on("data", (err) => {
-      errorOutput += err.toString();
-    });
-
-    python.on("close", async (code) => {
-      if (code !== 0) {
-        console.error("Python error:", errorOutput);
-        return res.status(500).json({ message: "Embedding failed" });
-      }
-      const embedding = JSON.parse(output);
-
-      if (!Array.isArray(embedding) || embedding.length !== 768) {
-        console.error("Invalid embedding length:", embedding.length);
-        return res.status(500).json({ message: "Invalid embedding" });
-      }
-      const vectorBuffer = Buffer.from(new Float32Array(embedding).buffer);
-      const result = await redisClient.sendCommand([
-        "FT.SEARCH",
-        "idx_products",
-        "*=>[KNN 5 @embedding $vec AS score]",
-        "PARAMS",
-        "2",
-        "vec",
-        vectorBuffer,
-        "SORTBY",
-        "score",
-        "RETURN",
-        "2",
-        "score",
-        "product_id",
-        "DIALECT",
-        "2",
-      ]);
-      const ids = [];
-      for (let i = 1; i < result.length; i += 2) {
-        const key = result[i];
-        if (typeof key === "string" && key.includes(":")) {
-          ids.push(Number(key.split(":")[1]));
-        }
-      }
-
-      return res.json({
-        recommendProductIds: ids,
-      });
-    });
+    return res.status(200).json({ message: "Action tracked successfully" });
   } catch (err) {
     console.error(err);
     next(err);
   }
 };
 
-const SuggestionProduct = async (req, res, next) => {
+const GetRecommendations = async (req, res, next) => {
   try {
-    const userId = req.user.id
-    const { productsIds } = req.body;
+    const userId = String(req.user.id);
+    
+    // Read from Redis
+    const cachedIdsString = await redisClient.get(`recommend:user:${userId}`);
+    
+    if (!cachedIdsString) {
+      return res.status(200).json({
+        message: [], 
+        userId
+      });
+    }
+
+    let productsIds = [];
+    try {
+      productsIds = JSON.parse(cachedIdsString);
+    } catch (e) {
+      console.error("Failed to parse cachedIds", e);
+    }
+
+    if (!Array.isArray(productsIds) || productsIds.length === 0) {
+       return res.status(200).json({
+        message: [], 
+        userId
+      });
+    }
+
     const products = await Product.findAll({
       where: {
         status: "approved",
@@ -176,7 +133,7 @@ const SuggestionProduct = async (req, res, next) => {
           [Op.in]: productsIds,
         },
       },
-      limit:5,
+      limit: 5,
       include: [
         {
           model: Business,
@@ -186,16 +143,10 @@ const SuggestionProduct = async (req, res, next) => {
       ],
     });
 
-    if(!products){
-      return res.status(404).json({
-        message:"not found"
-      })
-    }
-
     return res.status(200).json({
-      message:products, 
+      message: products, 
       userId
-    })
+    });
   } catch (error) {
     next(error);
   }
@@ -204,6 +155,6 @@ const SuggestionProduct = async (req, res, next) => {
 module.exports = {
   InsertProducts,
   exportProductsJson,
-  RecommendByCBF,
-  SuggestionProduct,
+  TrackUserAction,
+  GetRecommendations,
 };

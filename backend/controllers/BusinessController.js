@@ -32,19 +32,13 @@ const CheckTeacherId = async (req, res, next) => {
       message: business,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
 const RegisterBusiness = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
-    if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
-    const userId = decoded.id;
+    const userId = req.user.id;
 
     const { businessName, taxCode, phone, address, description, email } =
       req.body;
@@ -109,7 +103,7 @@ const RegisterBusiness = async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error registering business:", error);
-    next(error)
+    next(error);
   }
 };
 
@@ -138,7 +132,7 @@ const AddProduct = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -169,7 +163,7 @@ const GetAllProducts = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -205,7 +199,7 @@ const DeleteProductById = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -254,7 +248,7 @@ const EditProductById = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -305,7 +299,7 @@ const GetOrders = async (req, res, next) => {
     });
   } catch (error) {
     console.error("GetOrders error:", error);
-    next(error)
+    next(error);
   }
 };
 
@@ -324,7 +318,6 @@ const ChangeStatusOrder = async (req, res, next) => {
     }
 
     const { id } = req.params;
-    console.log("Order ID:", id);
     const order = await Order.findOne({
       where: {
         id,
@@ -346,7 +339,7 @@ const ChangeStatusOrder = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -406,7 +399,7 @@ const GetUserProducts = async (req, res, next) => {
           productPrice: item.product.price,
           productImage: item.product.image,
           stock: item.product.stock,
-        }))
+        })),
       ),
     }));
 
@@ -415,7 +408,7 @@ const GetUserProducts = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -442,7 +435,7 @@ const GetRevenue = async (req, res, next) => {
           model: Product,
           as: "product",
           required: true,
-          attributes: [], 
+          attributes: [],
           where: {
             businessId: businessId,
           },
@@ -477,7 +470,7 @@ const GetRevenue = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "totalRevenue",
         ],
@@ -514,7 +507,7 @@ const GetRevenue = async (req, res, next) => {
       23,
       59,
       59,
-      999
+      999,
     );
 
     const monthlyRevenueResult = await OrderItem.findOne({
@@ -522,7 +515,7 @@ const GetRevenue = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "monthlyRevenue",
         ],
@@ -600,7 +593,7 @@ const GetRevenue = async (req, res, next) => {
         [
           Sequelize.fn(
             "SUM",
-            Sequelize.literal("OrderItem.quantity * OrderItem.price")
+            Sequelize.literal("OrderItem.quantity * OrderItem.price"),
           ),
           "revenue",
         ],
@@ -638,7 +631,7 @@ const GetRevenue = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -676,7 +669,7 @@ const GetUnsoldProduct = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -726,7 +719,7 @@ const GetUserSentMessageToBusiness = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 
@@ -757,7 +750,7 @@ const GetProductsByBusiness = async (req, res, next) => {
     });
   } catch (error) {
     console.error(error);
-    next(error)
+    next(error);
   }
 };
 

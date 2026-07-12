@@ -10,10 +10,7 @@ export default async function Home() {
   const data = await GetPostsFollow();
   const posts = Array.isArray(data) ? data : data?.data || [];
   const dataPublic = await GetPostsPublic();
-  const postsPublic = dataPublic.map((post: any) => ({
-    id: post.id,
-    post_caption: post.title,
-  }));
+  const postsPublic = Array.isArray(dataPublic) ? dataPublic : [];
 
 
   

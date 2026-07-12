@@ -11,7 +11,7 @@ const AddPost = async (req, res, next) => {
   try {
     const userId = req.user.id;
 
-    const { post_title } = req.body;
+    const { post_title, privacy } = req.body;
 
     const filePath = req.file;
     let typeFile;
@@ -29,6 +29,7 @@ const AddPost = async (req, res, next) => {
       post_url: fileName,
       post_caption: post_title,
       type: typeFile,
+      privacy: privacy || "public",
     });
 
     return res.status(200).json({
@@ -418,6 +419,81 @@ const ReportPost = async (req, res, next) => {
   }
 };
 
+const GetPostsPublic = async (req, res, next) => {
+  try {
+    const limit = 10;
+    const cursor = req.query.cursor ? Number(req.query.cursor) : null;
+    let userId = null;
+    
+    const token = req.cookies?.token;
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
+            userId = decoded.id;
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const whereCondition = {
+      status: "active",
+      privacy: "public",
+    };
+
+    if (cursor) {
+      whereCondition.id = {
+        [Op.lt]: cursor,
+      };
+    }
+
+    const includeModels = [
+      {
+        model: User,
+        as: "user",
+        required: true,
+      },
+    ];
+
+    if (userId) {
+      includeModels.push({
+        model: PostReaction,
+        required: false,
+        attributes: ["id", "userId", "reactionType"],
+        where: { userId },
+      });
+    }
+
+    const posts = await Post.findAll({
+      where: whereCondition,
+      limit,
+      distinct: true,
+      include: includeModels,
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(
+              SELECT COUNT(*)
+              FROM PostReactions AS pr
+              WHERE pr.postId = Post.id
+            )`),
+            "reactionCount",
+          ],
+        ],
+      },
+      order: [["id", "DESC"]],
+    });
+
+    const nextCursor = posts.length > 0 ? posts[posts.length - 1].id : null;
+
+    return res.status(200).json({
+      data: posts,
+      nextCursor,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   AddPost,
   GetPost,
@@ -425,6 +501,7 @@ module.exports = {
   DeletePostUser,
   EditPostUser,
   GetPostsFollow,
+  GetPostsPublic,
   FakePostForUser,
   SharePost,
   GetSharePost,

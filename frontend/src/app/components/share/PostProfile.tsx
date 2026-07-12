@@ -140,6 +140,8 @@ const PostProfile = ({
     };
   }, [privacy, cursor, hasMore]);
 
+  const activePosts = privacy === "friends" ? posts : postsPublic;
+
   return (
     <>
       <div
@@ -152,9 +154,10 @@ const PostProfile = ({
         }}
       >
         <PostCreator />
-        {privacy === "friends" &&
-          Array.isArray(posts) &&
-          posts.map((post, index) => (
+        {Array.isArray(activePosts) &&
+          activePosts.map((post, index) => {
+            if (!post || !post.user) return null;
+            return (
             <div className="post-card" key={index}>
               <div className="d-flex align-items-center justify-content-between post-header">
                 <div className="d-flex align-items-center">
@@ -241,7 +244,7 @@ const PostProfile = ({
                 <div className="d-flex justify-content-around align-items-center border-top pt-3 interaction-buttons">
                   <ReactionPost
                     postId={post.id}
-                    typeReaction={post.PostReactions[0]?.reactionType}
+                    typeReaction={post.PostReactions?.[0]?.reactionType}
                     reactionCount={post.reactionCount}
                   />
 
@@ -261,39 +264,9 @@ const PostProfile = ({
                 {commentPostId === post.id && <CommentPost postId={post.id} />}
               </div>
             </div>
-          ))}
+          )})}
         <div ref={observerRef} style={{ height: "1px" }} />
 
-        {privacy == "public" &&
-          Array.isArray(postsPublic) &&
-          postsPublic.map((post) => (
-            <div className="post-card" key={post.id}>
-              <div className="d-flex align-items-center justify-content-between post-header">
-                <div className="d-flex align-items-center">
-                  <Image
-                    className="rounded-circle me-3 user-avatar"
-                    alt="avatar"
-                    width={50}
-                    height={50}
-                    src={`https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}
-                  />
-                  <div>
-                    <h5 className="username">Public</h5>
-                    <small className="post-time">
-                      {dayjs(new Date()).format("DD/MM/YYYY HH:mm")}
-                    </small>
-                  </div>
-                </div>
-              </div>
-
-              <div className="post-caption">
-                <p className="caption-text">
-                  <span className="caption-username">Public</span>{" "}
-                  {post.post_caption}
-                </p>
-              </div>
-            </div>
-          ))}
       </div>
 
       <div className="fixed-top-right">

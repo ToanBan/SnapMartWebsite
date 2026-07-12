@@ -20,8 +20,8 @@ ChartJS.register(
 );
 
 const RevenueChart = ({ data }:{data:any}) => {
-  const labels = data.map((item:any) => `Tháng ${item.month}`);
-  const revenues = data.map((item:any) => item.revenue);
+  const labels = data?.map((item:any) => `Tháng ${item.month}`);
+  const revenues = data?.map((item:any) => item.revenue);
 
   const chartData = {
     labels,

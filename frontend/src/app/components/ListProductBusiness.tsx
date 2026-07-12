@@ -24,16 +24,17 @@ const ListProductBusiness = ({
   const [showModal, setShowModal] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Partial<ProductsProps>>(
-    {}
+    {},
   );
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [page, setPage] = useState(1);
   const [addedProducts, setAddedProducts] = useState<ProductsProps[]>([]);
+
   useEffect(() => {
-    setProducts([...productsBusiness, ...addedProducts]);
-  }, [productsBusiness]);
+    setProducts([...(productsBusiness ?? []), ...addedProducts]);
+  }, [productsBusiness, addedProducts]);
 
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -52,7 +53,7 @@ const ListProductBusiness = ({
         const response = await DeleteProduct(productId);
         if (response.message === "Product deleted successfully") {
           setProducts((prev) =>
-            prev.filter((product) => product.id !== productId)
+            prev.filter((product) => product.id !== productId),
           );
           setSuccess(true);
           setTimeout(() => setSuccess(false), 3000);
@@ -144,7 +145,7 @@ const ListProductBusiness = ({
                       <td>
                         <img
                           src={
-                            product.image
+                            product?.image
                               ? `${imageUrl}${product.image}`
                               : "/default-image.png"
                           }
@@ -187,15 +188,15 @@ const ListProductBusiness = ({
                             product.status === "pending"
                               ? "bg-warning text-dark"
                               : product.status === "rejected"
-                              ? "bg-danger"
-                              : "bg-success"
+                                ? "bg-danger"
+                                : "bg-success"
                           }`}
                         >
                           {product.status === "pending"
                             ? "Chờ Xét Duyệt"
                             : product.status === "rejected"
-                            ? "Bị Từ Chối"
-                            : "Đã Duyệt"}
+                              ? "Bị Từ Chối"
+                              : "Đã Duyệt"}
                         </span>
                       </td>
                     </tr>
@@ -236,18 +237,18 @@ const ListProductBusiness = ({
                         Swal.fire(
                           "Thành công!",
                           "Sản phẩm đã được cập nhật.",
-                          "success"
+                          "success",
                         );
                         setProducts((prev) =>
                           prev.map((product) =>
-                            product.id === res.data.id ? res.data : product
-                          )
+                            product.id === res.data.id ? res.data : product,
+                          ),
                         );
                       } else {
                         Swal.fire(
                           "Lỗi!",
                           "Cập nhật sản phẩm thất bại.",
-                          "error"
+                          "error",
                         );
                       }
                     } else {

@@ -23,7 +23,7 @@ const ListNonProductBusiness = ({data}:{data:ProductProps[]}) => {
             </tr>
           </thead>
           <tbody>
-            {data.length > 0 ? (
+            {data?.length > 0 ? (
               data.map((product) => (
                 <tr key={product.id}>
                   <td>

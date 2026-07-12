@@ -38,17 +38,10 @@ const RegisterAccount = async (req, res, next) => {
         .json({ message: "Password and Confirm Password do not match" });
     }
     const existingUser = await User.findOne({
-      where: { email, is_verified: true },
+      where: { email },
     });
     if (existingUser) {
-      return res.status(400).json({ message: "Account existed" });
-    }
-
-    const NonVerifiedUser = await User.findOne({
-      where: { email, is_verified: false },
-    });
-    if (NonVerifiedUser) {
-      await NonVerifiedUser.destroy();
+      return res.status(400).json({ message: "Email đã được đăng ký, vui lòng đăng nhập" });
     }
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -342,9 +335,11 @@ const GetDataLoginGoogle = async (req, res, next) => {
     const userInfo = await userRes.json();
     const { name, email, picture } = userInfo;
 
-    let user = await User.findOne({ where: { email, status: "active" } });
+    let user = await User.findOne({ where: { email } });
 
-    if (!user) {
+    if (user) {
+      await user.update({ is_verified: true, status: "active" });
+    } else {
       const fakePassword = await bcrypt.hash(Date.now().toString(), 10);
       user = await User.create({
         username: name,

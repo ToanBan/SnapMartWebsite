@@ -10,11 +10,11 @@ const redis = require("redis");
 // });
 
 const redisClient = redis.createClient({
-  username: process.env.REDIS_USERNAME,
-  password: process.env.REDIS_PASSWORD,
+  ...(process.env.REDIS_USERNAME ? { username: process.env.REDIS_USERNAME } : {}),
+  ...(process.env.REDIS_PASSWORD ? { password: process.env.REDIS_PASSWORD } : {}),
   socket: {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT,
+    host: process.env.REDIS_HOST || "localhost",
+    port: Number(process.env.REDIS_PORT) || 6379,
   },
 });
 

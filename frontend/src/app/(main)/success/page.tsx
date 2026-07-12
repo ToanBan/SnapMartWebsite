@@ -23,7 +23,7 @@ const SuccessPage = async ({
 
   const order = await GetOrdersDetail(orderId || "");
   console.log("Order Details:", order);
-  const productsIds = order.items.map((item: any) => item.id);
+  const productsIds = order?.items?.map((item: any) => item.id);
 
   console.log(productsIds);
 
@@ -201,7 +201,7 @@ const SuccessPage = async ({
               </div>
             </div>
 
-            {order.items.map((item: any) => (
+            {order?.items?.map((item: any) => (
               <div key={item.id} className="item-row">
                 <span>{item.product.productName}</span>
                 <span className="fw-bold text-dark">
@@ -216,7 +216,7 @@ const SuccessPage = async ({
             <div className="total-row">
               <span>Tổng cộng</span>
               <span>
-                {order.total_amount.toLocaleString("vi-VN", {
+                {order?.total_amount?.toLocaleString("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 })}
