@@ -102,15 +102,21 @@ const GetRecommendations = async (req, res, next) => {
   try {
     const userId = String(req.user.id);
     
-    // Read from Redis
+    console.log("[GetRecommendations] Fetching recommendations for User ID:", userId);
+    console.log("[GetRecommendations] Redis config - host:", process.env.REDIS_HOST, "port:", process.env.REDIS_PORT);
+
+    // Đọc từ Redis cache (do worker đã cache)
     const cachedIdsString = await redisClient.get(`recommend:user:${userId}`);
     
     if (!cachedIdsString) {
+      console.log(`[GetRecommendations] No cached recommendations found for User ID: ${userId} in Redis`);
       return res.status(200).json({
         message: [], 
         userId
       });
     }
+
+    console.log(`[GetRecommendations] Raw cached data from Redis:`, cachedIdsString);
 
     let productsIds = [];
     try {
@@ -125,6 +131,8 @@ const GetRecommendations = async (req, res, next) => {
         userId
       });
     }
+
+    console.log(`[+] Backend Retrieved recommendations for User ID: ${userId} from Redis. ${productsIds.join(", ")}`);
 
     const products = await Product.findAll({
       where: {

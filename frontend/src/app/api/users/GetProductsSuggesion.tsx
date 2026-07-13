@@ -1,12 +1,9 @@
 import React from "react";
 
-const GetProductsSuggesion = async (productsIds: []) => {
-  if (!productsIds) return;
-  console.log(productsIds);
+const GetProductsSuggesion = async () => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/hello`, {
-      method: "POST",
-      body: JSON.stringify({ productsIds }),
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },

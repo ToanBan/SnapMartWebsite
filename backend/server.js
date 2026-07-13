@@ -366,7 +366,7 @@ app.get("/api/admin/orders", CheckAdmin, GetOrdersAdmin);
 app.post("/api/posts/report/:id", CheckUserAuthencation, ReportPost);
 app.post("/api/admin/posts/change-status", CheckAdmin, ChangeStatusPost);
 app.get("/api/admin/errors", CheckAdmin, GetErrors);
-app.post("/api/hello", CheckUserAuthencation, GetRecommendations);
+app.get("/api/hello", CheckUserAuthencation, GetRecommendations);
 app.post("/api/upload-file", upload.single("fileName"), UploadFile);
 app.get("/uploads/api/download/:filename", DownloadFile);
 app.get("/api/notifications", CheckUserAuthencation, GetNotification);

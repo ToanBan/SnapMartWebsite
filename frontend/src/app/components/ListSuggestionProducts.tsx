@@ -15,14 +15,8 @@ const ListSuggestionProducts = () => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const raw = localStorage.getItem("productIds");
-    console.log(raw);
-    if (!raw) return;
-    const { ids, createdAt } = JSON.parse(raw);
-    if (Date.now() - createdAt > 10 * 60 * 1000) return;
-    console.log(ids);
     const fetchProductsSuggesion = async () => {
-      const results = await GetProductsSuggesion(ids);
+      const results = await GetProductsSuggesion();
       setProducts(results);
     };
     fetchProductsSuggesion();
@@ -72,7 +66,7 @@ const ListSuggestionProducts = () => {
             <div className="col" key={product.id}>
               <div className="card product-card rounded-3 shadow-sm h-100">
                 <div className="position-relative overflow-hidden rounded-top-3">
-                  <Image
+                  <img
                     src={`${imageUrl}${product.image}`}
                     alt={product.productName}
                     width={200}

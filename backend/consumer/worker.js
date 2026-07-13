@@ -1,9 +1,12 @@
 const { connect, consumeFromQueue } = require("../extensions/rabbitmq");
-require("dotenv").config({ path: "../.env" });
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const startWorker = async () => {
   try {
     console.log("Starting RabbitMQ Consumer Worker...");
+    console.log("[Worker] REDIS_HOST:", process.env.REDIS_HOST);
+    console.log("[Worker] REDIS_PORT:", process.env.REDIS_PORT);
     
     // Khởi tạo kết nối RabbitMQ
     await connect();
@@ -11,7 +14,6 @@ const startWorker = async () => {
 const { Product } = require("../models");
 const redisClient = require("../extensions/redis");
 const { spawn } = require("child_process");
-const path = require("path");
 
 const ACTION_WEIGHT = {
   view: 1,
@@ -128,6 +130,8 @@ const pythonPath = path.join(__dirname, "../generate/encode_query.py");
               await redisClient.set(`recommend:user:${userId}`, JSON.stringify(ids), {
                 EX: 86400,
               });
+
+              console.log(`[+] Cached recommendations for User ID: ${userId} in Redis. ${ids.join(", ")}`);
 
               resolve(true);
             } catch (err) {

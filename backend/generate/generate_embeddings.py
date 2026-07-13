@@ -8,6 +8,8 @@ import redis
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_FILE = os.path.join(BASE_DIR, "data", "products_for_embeddings.json")
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6380))
 
 
 with open(DATA_FILE, "r", encoding="utf-8") as f:
@@ -35,7 +37,7 @@ with open(EMBEDDING_FILE, "w", encoding="utf-8") as f:
 print(f"Saved {len(product_vectors)} embeddings to {EMBEDDING_FILE}")
 
 
-r = redis.Redis(host="localhost", port=6379, db=0)
+r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0)
 
 for p in product_vectors:
     vec_bytes = np.array(p['vector'], dtype=np.float32).tobytes()

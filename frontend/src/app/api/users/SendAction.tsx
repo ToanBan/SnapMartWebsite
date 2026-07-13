@@ -12,16 +12,6 @@ const SendAction = async ({ actions }: { actions: any[] }) => {
     if (!res.ok) {
       throw new Error("Send action failed");
     }
-    const data = await res.json();
-    if (data.recommendProductIds) {
-      localStorage.setItem(
-        "productIds",
-        JSON.stringify({
-          ids: data.recommendProductIds,
-          createdAt: Date.now(),
-        })
-      );
-    }
 
     return;
   } catch (error) {
