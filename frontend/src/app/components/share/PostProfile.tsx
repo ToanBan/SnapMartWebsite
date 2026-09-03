@@ -210,13 +210,11 @@ const PostProfile = ({
               </div>
 
               <div className="post-media-content">
-                {post.type === "image" && post.post_url && (
-                  <Image
+                {post.post_url && post.type.startsWith("image") && (
+                  <img
                     className="img-fluid post-media"
                     alt="image_post"
-                    width={600}
-                    height={400}
-                        src={mediaUrl(post.post_url)}
+                    src={mediaUrl(post.post_url)}
                   />
                 )}
 

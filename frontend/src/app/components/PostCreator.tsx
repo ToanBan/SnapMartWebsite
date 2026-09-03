@@ -4,7 +4,6 @@ import { Video, Image as ImageIcon, Smile, X } from "lucide-react";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 const PostCreator = () => {
   const [showModal, setShowModal] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -28,13 +27,6 @@ const PostCreator = () => {
         e.currentTarget.reset();
         setShowModal(false);
         router.refresh();
-        await Swal.fire({
-          icon: "success",
-          title: "Đăng bài thành công",
-          text: "Bài viết của bạn đã được đăng.",
-          timer: 1800,
-          showConfirmButton: false,
-        });
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
