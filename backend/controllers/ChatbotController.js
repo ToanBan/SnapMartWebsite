@@ -34,7 +34,7 @@ User question:
     const json = JSON.parse(match[0]);
     return json.intent;
   } catch (err) {
-    console.error("❌ Intent LLM lỗi:", err);
+    console.error("Intent LLM lỗi:", err);
     return null;
   }
 };
@@ -138,7 +138,7 @@ const AnswerFromDB = async (caption) => {
 
     products = businesses.flatMap((b) => b.products || []);
   }
-  // 🔹 Không có brand → query trực tiếp Product
+  
   else {
     products = await Product.findAll({
       where,
@@ -150,7 +150,7 @@ const AnswerFromDB = async (caption) => {
   if (!products.length) {
     return {
       type: "TEXT",
-      message: "❌ Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn.",
+      message: "Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn.",
     };
   }
 

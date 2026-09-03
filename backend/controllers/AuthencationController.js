@@ -373,19 +373,19 @@ const GetDataLoginGoogle = async (req, res, next) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       path: "/",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       path: "/",
     });
 
-    res.redirect("http://localhost:3000");
+    res.redirect(process.env.FRONTEND_URL || "http://localhost:3000");
   } catch (error) {
     console.error("Google OAuth error:", error.message);
     next(error);
