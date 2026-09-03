@@ -20,11 +20,14 @@ module.exports = {
     );
 
     if (users.length > 0) {
+      const passwordHash = await bcrypt.hash(password, 12);
       await queryInterface.sequelize.query(
-        'UPDATE Users SET role = :role, status = :status, is_verified = :isVerified, updatedAt = :updatedAt WHERE id = :id',
+        'UPDATE Users SET username = :username, password = :password, role = :role, status = :status, is_verified = :isVerified, updatedAt = :updatedAt WHERE id = :id',
         {
           replacements: {
             id: users[0].id,
+            username,
+            password: passwordHash,
             role: 'admin',
             status: 'active',
             isVerified: true,

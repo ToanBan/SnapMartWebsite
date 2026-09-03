@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
-const { where } = require("sequelize");
 
-const CheckAdmin = async (req, res, next) => {
+const CheckBusiness = async (req, res, next) => {
   try {
     const token = req.cookies.token;
     if (!token) {
@@ -10,23 +9,15 @@ const CheckAdmin = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
+    const user = await User.findByPk(decoded.id);
 
-    const user = await User.findOne({
-      where: {
-        id: decoded.id,
-      },
-    });
-
-    if (!user || user.role !== "admin") {
-      return res.status(403).json({
-        message: "Forbidden",
-      });
+    if (!user || user.role !== "business" || user.status !== "active") {
+      return res.status(403).json({ message: "Forbidden" });
     }
 
     req.user = decoded;
     next();
   } catch (error) {
-    console.error(error);
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({ message: "Token expired" });
     }
@@ -34,4 +25,4 @@ const CheckAdmin = async (req, res, next) => {
   }
 };
 
-module.exports = { CheckAdmin };
+module.exports = { CheckBusiness };

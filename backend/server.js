@@ -13,6 +13,7 @@ require("dotenv").config();
 require("./schedule/autoSchedule");
 const { CheckUserAuthencation } = require("./middleware/checkAuthencation");
 const { CheckAdmin } = require("./middleware/checkAdmin");
+const { CheckBusiness } = require("./middleware/checkBusiness");
 const errorLogger = require("./middleware/errorLogger");
 const {
   InsertProducts,
@@ -299,6 +300,7 @@ app.get("/api/friends", CheckUserAuthencation, GetFriend);
 app.get("/api/messages", CheckUserAuthencation, GetMessageByUserId);
 app.post(
   "/api/business/register",
+  CheckUserAuthencation,
   upload.fields([
     { name: "logo", maxCount: 1 },
     { name: "licence", maxCount: 1 },
@@ -306,16 +308,16 @@ app.post(
   RegisterBusiness,
 );
 
-app.get("/api/admin/verify-businesses", GetVerifyBusinesses);
+app.get("/api/admin/verify-businesses", CheckAdmin, GetVerifyBusinesses);
 app.post("/api/admin/verify-business", CheckAdmin, VerifyBusiness);
 app.get("/api/check_teacher", CheckUserAuthencation, CheckTeacherId);
 app.post(
   "/api/business/product/add",
-  CheckUserAuthencation,
+  CheckBusiness,
   upload.single("productImage"),
   AddProduct,
 );
-app.get("/api/business/product", CheckUserAuthencation, GetAllProducts);
+app.get("/api/business/product", CheckBusiness, GetAllProducts);
 app.get("/api/admin/business/products", CheckAdmin, GetProductsPending);
 app.post("/api/admin/product/verify", CheckAdmin, VerifyProduct);
 app.get("/api/products", GetProductsApproved);
@@ -342,10 +344,10 @@ app.post("/api/chatbot", CheckUserAuthencation, ResponseToUser);
 app.post("/api/products", SearchProductByUser);
 app.post("/api/send-action", CheckUserAuthencation, TrackUserAction);
 app.get("/api/users/products", CheckUserAuthencation, GetUserProducts);
-app.get("/api/business/revenue", CheckUserAuthencation, GetRevenue);
+app.get("/api/business/revenue", CheckBusiness, GetRevenue);
 app.get(
   "/api/business/unsold-product",
-  CheckUserAuthencation,
+  CheckBusiness,
   GetUnsoldProduct,
 );
 app.get("/api/shop/:id", SeekBusiness);
@@ -354,7 +356,7 @@ app.get(
   CheckUserAuthencation,
   GetUserSentMessageToBusiness,
 );
-app.get("/api/messages-business", CheckUserAuthencation, GetMessageBusiness);
+app.get("/api/messages-business", CheckBusiness, GetMessageBusiness);
 app.get("/api/products/shop/:id", GetProductsByBusiness);
 app.get("/api/admin/revenue", CheckAdmin, GetRevenueAdmin);
 app.get("/api/admin/users", CheckAdmin, GetUserAdmin);

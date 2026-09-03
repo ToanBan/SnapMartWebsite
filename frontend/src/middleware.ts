@@ -3,9 +3,6 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const token = req.cookies.get("token")?.value;
-
-
   if (pathname.startsWith("/verify") || pathname.startsWith("/resetpassword")) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/check-step`, {
       headers: { Cookie: req.headers.get("cookie") || "" },
@@ -27,35 +24,6 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // --- NHÓM 2: KIỂM TRA ROLE (ADMIN/TEACHER) ---
-  if (pathname.startsWith("/admin") || pathname.startsWith("/business")) {
-    if (!token) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/role`, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store", 
-      });
-
-      if (!res.ok) throw new Error();
-
-      const data = await res.json();
-      const userRole = data.message;
-      console.log("User role:", userRole);
-      if (pathname.startsWith("/admin") && userRole !== "admin") {
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
-      }
-
-      if (pathname.startsWith("/business") && userRole !== "business") {
-        return NextResponse.redirect(new URL("/unauthorized", req.url));
-      }
-    } catch (err) {
-      return NextResponse.redirect(new URL("/unauthorized", req.url));
-    }
-  }
-
   return NextResponse.next();
 }
 
@@ -64,7 +32,5 @@ export const config = {
   matcher: [
     "/verify", 
     "/resetpassword", 
-    "/admin/:path*", 
-    "/business/:path*"
   ],
 };
