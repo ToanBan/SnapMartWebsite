@@ -57,7 +57,7 @@ const RegisterPage = ({ message }: { message: string }) => {
   
       });
       if(res.ok){
-        window.location.href = "/verify";
+        window.location.href = "/login"; // Redirect to login after registration
       }
       else{
         setError(true);
