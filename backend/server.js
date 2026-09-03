@@ -15,6 +15,8 @@ const { CheckUserAuthencation } = require("./middleware/checkAuthencation");
 const { CheckAdmin } = require("./middleware/checkAdmin");
 const { CheckBusiness } = require("./middleware/checkBusiness");
 const errorLogger = require("./middleware/errorLogger");
+
+const frontendOrigin = process.env.FRONTEND_URL || "http://localhost:3000";
 const {
   InsertProducts,
   exportProductsJson,
@@ -24,7 +26,7 @@ const {
 
 const io = new Server(server, {
   cors: {
-    origin: `${process.env.FRONTEND_URL || "http://localhost:3000"}`,
+    origin: frontendOrigin,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -32,7 +34,7 @@ const io = new Server(server, {
 
 app.use(
   cors({
-    origin: `${process.env.FRONTEND_URL || "http://localhost:3000"}`,
+    origin: frontendOrigin,
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   }),

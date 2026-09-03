@@ -43,10 +43,19 @@ const PostProfile = ({
   const [openPostId, setOpenPostId] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [posts, setPosts] = useState<PostProps[]>(initialPosts);
+  const [publicPosts, setPublicPosts] = useState<PostProps[]>(postsPublic);
   const [cursor, setCursor] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = React.useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setPosts(initialPosts);
+  }, [initialPosts]);
+
+  useEffect(() => {
+    setPublicPosts(postsPublic);
+  }, [postsPublic]);
   const toggleComments = (postId: string) => {
     setCommentPostId((prev) => (prev === postId ? null : postId));
   };
@@ -88,7 +97,7 @@ const PostProfile = ({
       if (data.data && data.data.length > 0) {
         setPosts((prev) => {
           const newPosts = data.data.filter(
-            (newPost: PostProps) => prev.some((p) => p.id !== newPost.id),
+            (newPost: PostProps) => !prev.some((p) => p.id === newPost.id),
           );
           return [...prev, ...newPosts];
         });
@@ -141,7 +150,7 @@ const PostProfile = ({
     };
   }, [privacy, cursor, hasMore]);
 
-  const activePosts = privacy === "friends" ? posts : postsPublic;
+  const activePosts = privacy === "friends" ? posts : publicPosts;
 
   return (
     <>
@@ -156,10 +165,10 @@ const PostProfile = ({
       >
         <PostCreator />
         {Array.isArray(activePosts) &&
-          activePosts.map((post, index) => {
+          activePosts.map((post) => {
             if (!post || !post.user) return null;
             return (
-            <div className="post-card" key={index}>
+            <div className="post-card" key={post.id}>
               <div className="d-flex align-items-center justify-content-between post-header">
                 <div className="d-flex align-items-center">
                   <Image

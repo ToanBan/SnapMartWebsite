@@ -12,6 +12,7 @@ const GetPostsFollow = async () => {
         "Content-Type": "application/json",
         Cookie:`token=${token}`
       },
+      cache: "no-store",
     });
 
     const data = await res.json();
