@@ -1,8 +1,11 @@
+"use client";
+
 import React from "react";
 import Pagination from "./share/Pagination";
-import Image from "next/image";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import AddCart from "../api/users/AddCart";
+import { useState } from "react";
 interface ProductProps {
   id: string;
   productName: string;
@@ -21,7 +24,21 @@ const ListProductByBusiness = ({
   page: number;
 }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
-  console.log(products);
+  const [addingProductId, setAddingProductId] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
+
+  const handleAddToCart = async (product: ProductProps) => {
+    if (addingProductId) return;
+    setAddingProductId(product.id);
+    const result = await AddCart(product.id, product.price);
+    setMessage(
+      result.message === "Cart item added" || result.message === "Cart item updated"
+        ? "Đã thêm vào giỏ hàng"
+        : "Không thể thêm vào giỏ hàng",
+    );
+    setAddingProductId(null);
+    setTimeout(() => setMessage(""), 2500);
+  };
   return (
     <>
       <section className="py-5 mt-5" id="products">
@@ -33,7 +50,8 @@ const ListProductByBusiness = ({
             {products.length > 0 ? (
               products.map((product, index) => (
                 <div key={index} className="col-md-6 col-lg-3">
-                  <Link className="text-decoration-none text-dark" href={`/shop/product/${product.id}`}>
+                  <div className="product-card shadow-sm h-100">
+                    <Link className="text-decoration-none text-dark" href={`/shop/product/${product.id}`}>
                     <div className="product-card shadow-sm">
                       <div className="product-img-wrapper">
                         <img
@@ -54,19 +72,29 @@ const ListProductByBusiness = ({
                           <span className="fw-bold text-primary fs-5">
                             {product.price} VND
                           </span>
-                          <button className="btn btn-sm btn-outline-primary">
+                          <span className="btn btn-sm btn-outline-primary">
                             <Plus size={24} />
-                          </button>
+                          </span>
                         </div>
                       </div>
                     </div>
-                  </Link>
+                    </Link>
+                    <button
+                      type="button"
+                      className="btn btn-outline-primary w-100 mt-2"
+                      disabled={addingProductId === product.id}
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      {addingProductId === product.id ? "Đang thêm..." : "Thêm giỏ hàng"}
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
               <></>
             )}
           </div>
+          {message && <div className="alert alert-info mt-4 text-center">{message}</div>}
         </div>
       </section>
 

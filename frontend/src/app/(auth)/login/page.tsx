@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import AlertError from "@/app/components/share/AlertError";
+import styles from "../auth.module.css";
 const LoginPage = () => {
   const [error, setError] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -57,47 +58,38 @@ const LoginPage = () => {
 
   return (
     <>
-      <div
-        className="container-fluid min-vh-100 d-flex align-items-center justify-content-center"
-        style={{ backgroundColor: "cornsilk" }}
-      >
-        <div
-          className="row h-100 g-0"
-          style={{
-            borderRadius: "10px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            width: "1200px",
-          }}
-        >
-          {/* Left image */}
-          <div className="d-none d-md-flex col-md-6 bg-light align-items-center justify-content-center">
-            <Image
-              src="https://img.freepik.com/free-vector/welcome-lettering-design_23-2147914748.jpg?ga=GA1.1.262810338.1745506426&semt=ais_hybrid&w=740"
-              alt="login image"
-              width={500}
-              height={500}
-              style={{ height: "625px", objectFit: "cover", width: "600px" }}
-              className="rounded-start"
-              priority
-            />
+      <div className={`${styles.authPage} d-flex align-items-center justify-content-center`}>
+        <div className={`${styles.authShell} row g-0`}>
+          <div className={`${styles.brandPanel} d-none d-lg-flex col-lg-7 flex-column justify-content-between`}>
+            <div className={styles.brandContent}>
+              <Link href="/" className={styles.brandLink}>
+                <span className={styles.brandMark}>S</span>
+                <span>SnapMart</span>
+              </Link>
+            </div>
+            <div className={styles.brandContent}>
+              <span className={styles.brandEyebrow}>Shop smarter</span>
+              <h1 className={styles.brandTitle}>Khám phá sản phẩm, kết nối và mua sắm theo cách của bạn.</h1>
+              <p className={styles.brandDescription}>Đăng nhập để theo dõi đơn hàng, lưu sản phẩm yêu thích và không bỏ lỡ những ưu đãi phù hợp.</p>
+            </div>
+            <div className={`${styles.brandStats} ${styles.brandContent}`}>
+              <div className={styles.brandStat}><strong>24/7</strong><span>Trải nghiệm</span></div>
+              <div className={styles.brandStat}><strong>Hot</strong><span>Ưu đãi mới</span></div>
+              <div className={styles.brandStat}><strong>100%</strong><span>Kết nối</span></div>
+            </div>
           </div>
 
-          {/* Right form */}
-          <div
-            className="col-md-6 d-flex align-items-center justify-content-center bg-white"
-            style={{ padding: "40px" }}
-          >
-            <div
-              className="w-100 px-4"
-              style={{ maxWidth: "400px", width: "478px" }}
-            >
-              <h2 className="text-center fw-bold mb-4">Welcome Back 👋</h2>
-
+          <div className={`${styles.formPanel} col-lg-5 d-flex align-items-center justify-content-center`}>
+            <div className={styles.formCard}>
+              <div className="text-center mb-4">
+                <p className={styles.formEyebrow}>Welcome back</p>
+                <h2 className={styles.formTitle}>Đăng nhập</h2>
+              </div>
               <form onSubmit={handleLogin}>
                 <div className="form-floating mb-3">
                   <input
                     type="email"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="email"
                     name="email"
                     placeholder="Email của bạn"
@@ -109,7 +101,7 @@ const LoginPage = () => {
                 <div className="form-floating mb-3">
                   <input
                     type="password"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="password"
                     name="password"
                     placeholder="Mật khẩu"
@@ -134,7 +126,7 @@ const LoginPage = () => {
 
                 <div className="d-grid mb-3">
                   <button
-                    className="btn btn-primary btn-lg text-uppercase fw-bold"
+                    className={`${styles.authPrimary} btn btn-primary btn-lg text-uppercase fw-bold`}
                     type="submit"
                     disabled={isSubmitting}
                   >
@@ -142,20 +134,18 @@ const LoginPage = () => {
                   </button>
                 </div>
 
-                {/* OR with lines */}
-                <div className="d-flex align-items-center my-4">
+                <div className={`${styles.authDivider} d-flex align-items-center my-4`}>
                   <div className="flex-grow-1 border-top"></div>
-                  <span className="mx-2 text-muted">or</span>
+                  <span className="mx-2">or</span>
                   <div className="flex-grow-1 border-top"></div>
                 </div>
 
-                {/* Google Sign In */}
                 <div className="d-grid mb-4">
                   <button
                     onClick={handleRedirectGoogle}
                     type="button"
                     disabled={isSubmitting}
-                    className="btn btn-outline-danger btn-lg d-flex align-items-center justify-content-center gap-2"
+                    className={`${styles.authGoogle} btn btn-lg d-flex align-items-center justify-content-center gap-2`}
                   >
                     <Image
                       src="https://cdn-icons-png.flaticon.com/128/300/300221.png"
@@ -170,12 +160,12 @@ const LoginPage = () => {
                 <div className="text-center mt-4">
                   <p className="mb-1">
                     Don’t have an account?{" "}
-                    <Link href="/register" className="text-decoration-none">
+                    <Link href="/register" className={`${styles.authLink} text-decoration-none`}>
                       Register Here
                     </Link>
                   </p>
                   <p>
-                    <Link href="/forgot" className="text-decoration-none">
+                    <Link href="/forgot" className={`${styles.authLink} text-decoration-none`}>
                       Forgot password?
                     </Link>
                   </p>

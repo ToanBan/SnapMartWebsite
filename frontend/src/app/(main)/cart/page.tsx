@@ -9,7 +9,7 @@ const CartPage = async() => {
     <>
       <div className="container" style={{marginTop:"8rem"}}>
         <div className="row shadow my-4">
-          <ListCart carts={carts}/>
+          <ListCart carts={Array.isArray(carts) ? carts : []}/>
           
         </div>
       </div>

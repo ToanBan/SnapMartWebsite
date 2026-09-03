@@ -4,6 +4,7 @@ import GetProductDetail from "@/app/api/admin/GetProductDetail";
 import Image from "next/image";
 import TrackProductView from "@/app/components/TrackProductView";
 import Link from "next/link";
+import ProductDetailActions from "@/app/components/ProductDetailActions";
 const ProductDetail = async ({
   params,
 }: {
@@ -52,14 +53,7 @@ const ProductDetail = async ({
                 </span>
               </div>
 
-              <div className="d-flex gap-3 mb-4">
-                <button className={`btn btn-lg px-4 ${styles.btnAddCart}`}>
-                  <i className="fas fa-cart-plus me-2"></i> Thêm vào Giỏ hàng
-                </button>
-                <button className={`btn btn-lg px-4 ${styles.btnBuyNow}`}>
-                  <i className="fas fa-bolt me-2"></i> MUA NGAY
-                </button>
-              </div>
+              <ProductDetailActions productId={slug} price={product.price} />
 
               {/* Tabs */}
               <ul

@@ -2,9 +2,9 @@
 
 import React, { use, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { z } from "zod";
 import AlertError from "@/app/components/share/AlertError";
+import styles from "../auth.module.css";
 const RegisterSchema = z
   .object({
     username: z
@@ -78,43 +78,44 @@ const RegisterPage = ({ message }: { message: string }) => {
 
   return (
     <>
-      <div
-        className="container-fluid min-vh-100 d-flex align-items-center justify-content-center position-relative"
-        style={{ backgroundColor: "#fefae0" }}
-      >
-        <div
-          className="row w-100 h-75 g-0 overflow-hidden shadow"
-          style={{ borderRadius: "12px", maxWidth: "1100px" }}
-        >
-          <div className="d-none d-md-block col-md-6 position-relative p-0">
-            <div
-              style={{ position: "relative", width: "100%", height: "100%" }}
-            >
-              <Image
-                src="https://img.freepik.com/premium-vector/handsome-boy-saying-hello-comic-bubble-speech_33070-5613.jpg?ga=GA1.1.262810338.1745506426&semt=ais_hybrid&w=740"
-                alt="register-image"
-                fill
-                style={{ objectFit: "cover" }}
-                className="rounded-start"
-                priority
-              />
+      <div className={`${styles.authPage} d-flex align-items-center justify-content-center`}>
+        <div className={`${styles.authShell} row g-0`}>
+          <div className={`${styles.brandPanel} d-none d-lg-flex col-lg-7 flex-column justify-content-between`}>
+            <div className={styles.brandContent}>
+              <Link href="/" className={styles.brandLink}>
+                <span className={styles.brandMark}>S</span>
+                <span>SnapMart</span>
+              </Link>
+            </div>
+            <div className={styles.brandContent}>
+              <span className={styles.brandEyebrow}>Start saving smarter</span>
+              <h1 className={styles.brandTitle}>Tạo tài khoản để bắt đầu khám phá những điều bạn yêu thích.</h1>
+              <p className={styles.brandDescription}>Đăng ký miễn phí để lưu sản phẩm, theo dõi đơn hàng và kết nối với cộng đồng SnapMart.</p>
+            </div>
+            <div className={`${styles.brandBenefits} ${styles.brandContent}`}>
+              <p>Lợi ích ngay khi đăng ký</p>
+              <ul>
+                <li>Lưu sản phẩm yêu thích</li>
+                <li>Theo dõi đơn hàng dễ dàng</li>
+                <li>Không bỏ lỡ ưu đãi mới</li>
+              </ul>
             </div>
           </div>
 
           {/* Right Form */}
-          <div
-            className="col-md-6 d-flex align-items-center justify-content-center bg-white"
-            style={{ padding: "40px" }}
-          >
-            <div className="w-100 px-4" style={{ maxWidth: "400px" }}>
-              <h2 className="text-center fw-bold mb-4">Create Your Account</h2>
+          <div className={`${styles.formPanel} col-lg-5 d-flex align-items-center justify-content-center`}>
+            <div className={styles.formCard}>
+              <div className="text-center mb-4">
+                <p className={styles.formEyebrow}>Join us</p>
+                <h2 className={styles.formTitle}>Đăng ký</h2>
+              </div>
 
               <form onSubmit={handleRegister}>
                 
                 <div className="form-floating mb-3">
                   <input
                     type="text"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="username"
                     name="username"
                     placeholder="Tên của bạn"
@@ -132,7 +133,7 @@ const RegisterPage = ({ message }: { message: string }) => {
                 <div className="form-floating mb-3">
                   <input
                     type="email"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="email"
                     name="email"
                     placeholder="Email của bạn"
@@ -150,7 +151,7 @@ const RegisterPage = ({ message }: { message: string }) => {
                 <div className="form-floating mb-3">
                   <input
                     type="password"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="password"
                     name="password"
                     placeholder="Mật khẩu"
@@ -168,7 +169,7 @@ const RegisterPage = ({ message }: { message: string }) => {
                 <div className="form-floating mb-4">
                   <input
                     type="password"
-                    className="form-control"
+                    className={`${styles.authInput} form-control`}
                     id="cfnpassword"
                     name="cfnpassword"
                     placeholder="Nhập lại mật khẩu"
@@ -185,7 +186,7 @@ const RegisterPage = ({ message }: { message: string }) => {
                 {/* Submit */}
                 <div className="d-grid mb-3">
                   <button
-                    className="btn btn-primary btn-lg text-uppercase fw-bold"
+                    className={`${styles.authPrimary} btn btn-primary btn-lg text-uppercase fw-bold`}
                     type="submit"
                     disabled={isSubmitting}
                   >
@@ -199,7 +200,7 @@ const RegisterPage = ({ message }: { message: string }) => {
                     Already have an account?{" "}
                     <Link
                       href="/login"
-                      className="text-decoration-none fw-semibold"
+                      className={`${styles.authLink} text-decoration-none fw-semibold`}
                     >
                       Login here
                     </Link>

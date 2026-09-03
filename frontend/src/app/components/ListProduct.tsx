@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import AddCart from "../api/users/AddCart";
 import AlertSuccess from "./share/AlertSuccess";
@@ -11,8 +10,11 @@ const ListProduct = ({ products }: { products: any }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [addingProductId, setAddingProductId] = useState<string | null>(null);
 
   const handleAddToCart = async (productId: string, price: string) => {
+    if (addingProductId) return;
+    setAddingProductId(productId);
     const result = await AddCart(productId, price);
     if (
       result.message === "Cart item added" ||
@@ -25,59 +27,44 @@ const ListProduct = ({ products }: { products: any }) => {
       setError(true);
       setTimeout(() => setError(false), 3000);
     }
+    setAddingProductId(null);
   };
 
   return (
     <>
       {products && products.length > 0 ? (
-        products.map((product: any) => (
-          <div className="col" key={product.id}>
-            <div className="card product-card rounded-3 shadow-sm h-100">
-              <div className="position-relative overflow-hidden rounded-top-3">
+        products.filter((product: any) => product?.id).map((product: any) => (
+          <div className="col-md-6 col-lg-3" key={product.id}>
+            <div className="product-card shadow-sm h-100">
+              <Link className="text-decoration-none text-dark" href={`/shop/product/${product.id}`}>
+                <div className="product-img-wrapper">
                 <img
-                style={{width:"200px", height:"150px"}}
-                  className="card-img-top"
+                  style={{ width: "250px", height: "250px", objectFit: "cover" }}
                   src={`${imageUrl}${product.image}`}
-                  alt={product.productName}
+                  alt={`${product.productName}`}
                 />
-
-                <span className="badge text-bg-danger position-absolute top-0 start-0 m-2 fw-bold">
-                  GIẢM 20%
-                </span>
-              </div>
-
-              <div className="card-body d-flex flex-column justify-content-between">
-                <div>
-                  <h5
-                    className="card-title fs-6 fw-semibold text-truncate mb-1"
-                    title="Laptop Gaming Thế Hệ Mới, Màn Hình 120Hz"
-                  >
-                    {product.productName}
-                  </h5>
-                  <p className="card-text text-muted small mb-2">
-                    <span className="fw-medium">Cửa hàng:</span>{" "}
-                    {product.business.businessName}
+                </div>
+                <div className="p-4">
+                  <h5 className="fw-bold mb-2">{product.productName}</h5>
+                  <p className="text-muted small mb-2">
+                    Cửa hàng: {product.business?.businessName || "Đang cập nhật"}
+                  </p>
+                  <p className="fw-bold text-primary fs-5 mb-0">
+                    {Number(product.price).toLocaleString("vi-VN")} VND
                   </p>
                 </div>
-
-                <p className="price-text text-danger mt-1 mb-2">
-                  {product.price.toLocaleString("vi-VN", {
-                    style: "currency",
-                    currency: "VND",
-                  })}
-                </p>
-
-                <div className="d-flex flex-column gap-2">
-                  <Link href={`/shop/product/${product.id}`}>
-                    <button className="btnDetail">XEM CHI TIẾT</button>
-                  </Link>
-                  <button
-                    onClick={() => handleAddToCart(product.id, product.price)}
-                    className="btnCart"
-                  >
-                    THÊM GIỎ HÀNG
-                  </button>
-                </div>
+              </Link>
+              <div className="px-4 pb-4 d-flex flex-column gap-2">
+                <Link href={`/shop/product/${product.id}`} className="btnDetail text-center text-decoration-none">
+                  XEM CHI TIẾT
+                </Link>
+                <button
+                  onClick={() => handleAddToCart(product.id, String(product.price))}
+                  className="btnCart"
+                  disabled={addingProductId === product.id}
+                >
+                  {addingProductId === product.id ? "ĐANG THÊM..." : "THÊM GIỎ HÀNG"}
+                </button>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ const GetCart = async () => {
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    return { success: false, message: "No authentication token found" };
+    return [];
   }
 
   try {
@@ -19,14 +19,14 @@ const GetCart = async () => {
     });
 
     if (!res.ok) {
-      return { success: false, message: "Failed to fetch cart" };
+      return [];
     }
 
     const data = await res.json();
     return data.message;
   } catch (error) {
     console.error("Error getting cart:", error);
-    return { success: false, message: "Failed to get cart" };
+    return [];
   }
 };
 
