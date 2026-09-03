@@ -92,7 +92,6 @@ const {
   SeekBusiness,
   RefreshToken,
   CheckRoleUser,
-  SendVerificationOTP,
 } = require("./controllers/AuthencationController");
 const {
   GetProfileDetail,
@@ -248,7 +247,6 @@ app.post("/api/logout", LogoutAccount);
 app.post("/api/forgot", ForgotAccount);
 app.post("/api/reset-password", upload.single(""), ResetPasswordAccount);
 app.get("/api/role", CheckRoleUser);
-app.post("/api/send-verification-otp", CheckUserAuthencation, SendVerificationOTP);
 app.get("/api/google", RedirectGoogleLogin);
 app.get("/api/auth/google/callback", GetDataLoginGoogle);
 app.get("/api/check-step", CheckStepAuthencation);

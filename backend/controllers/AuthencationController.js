@@ -13,9 +13,7 @@ const GetAccount = async (req, res, next) => {
     const user = await User.findOne({
       where: {
         id: userId,
-        is_verified: {
-          [Op.or]: [true, false] // Allow unverified users to log in
-        },
+        is_verified: true,
       },
     });
     if (!user) {
@@ -29,33 +27,6 @@ const GetAccount = async (req, res, next) => {
 };
 
 const RegisterAccount = async (req, res, next) => {
-  const SendVerificationOTP = async (req, res, next) => {
-    try {
-      const user = await User.findByPk(req.user.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      if (user.is_verified) {
-        return res.status(400).json({ message: "Email is already verified" });
-      }
-
-      const otp = Math.floor(100000 + Math.random() * 900000).toString();
-      await redisClient.set("email", user.email);
-      await redisClient.set("verifyregister", "true");
-      await redisClient.set("step", "register", { EX: 300 });
-      await redisClient.set(`otp:${user.email}`, otp, { EX: 300 });
-      await sendMail(
-        user.email,
-        "Xác thực OTP email",
-        `Mã OTP của bạn là ${otp}`,
-      );
-
-      return res.status(200).json({ message: "Verification OTP sent" });
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
-  };
   try {
     const { username, password, email, cfnpassword } = req.body;
     if (!username || !password || !email || !cfnpassword) {
@@ -151,8 +122,12 @@ const LoginAccount = async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
+    // const user = await User.findOne({
+    //   where: { email, status: "active" },
+    // });
+
     const user = await User.findOne({
-      where: { email, status: "active" },
+      where: { email },
     });
     if (!user) {
       return res.status(400).json({ message: "Account does not exist" });
@@ -595,5 +570,4 @@ module.exports = {
   FakeUser,
   RefreshToken,
   CheckRoleUser,
-  SendVerificationOTP,
 };

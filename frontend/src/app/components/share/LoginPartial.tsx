@@ -9,7 +9,6 @@ import {
   faSignOutAlt,
   faBuilding,
   faBox,
-  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 import { useUser } from "@/hooks/useUser";
 const LoginPartial = () => {
@@ -33,24 +32,6 @@ const LoginPartial = () => {
       }
     } catch (error) {
       console.error("Error during logout:", error);
-    }
-  };
-
-  const handleVerifyEmail = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/send-verification-otp`,
-        {
-          method: "POST",
-          credentials: "include",
-        },
-      );
-
-      if (res.ok) {
-        window.location.href = "/verify"; // Redirect to verification page
-      }
-    } catch (error) {
-      console.error("Error sending verification OTP:", error);
     }
   };
 
@@ -94,18 +75,6 @@ const LoginPartial = () => {
                   <FontAwesomeIcon icon={faBuilding} className="me-2 text-info" />{" "}
                   Business
                 </Link>
-              </li>
-            )}
-
-            {!account.is_verified && ( // Show verify email button if not verified
-              <li>
-                <button
-                  onClick={handleVerifyEmail}
-                  className="dropdown-item"
-                >
-                  <FontAwesomeIcon icon={faEnvelope} className="me-2 text-info" />
-                  Verify email
-                </button>
               </li>
             )}
 

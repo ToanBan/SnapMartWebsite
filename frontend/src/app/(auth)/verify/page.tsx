@@ -26,7 +26,7 @@ const VerifyPage = () => {
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
-          window.location.href = "/"; // Redirect to home after verification
+          window.location.href = "/login";
         }, 3000);
       } else if (data.message == "resetpassword") {
         setSuccess(true);
