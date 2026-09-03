@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, Business } = require("../models");
 
 const CheckBusiness = async (req, res, next) => {
   try {
@@ -15,7 +15,15 @@ const CheckBusiness = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
+    const business = await Business.findOne({
+      where: { userId: user.id, status: "approved" },
+    });
+    if (!business) {
+      return res.status(403).json({ message: "Business is not approved" });
+    }
+
     req.user = decoded;
+    req.business = business;
     next();
   } catch (error) {
     if (error.name === "TokenExpiredError") {
