@@ -33,6 +33,7 @@ interface PostProps {
 
 const SharePost = ({ posts }: { posts: PostProps[] }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
+  const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
 
   return (
     <div
@@ -122,7 +123,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                         alt="shared_image"
                         width={550}
                         height={350}
-                        src={imageUrl + post.sharedPost.post_url}
+                        src={mediaUrl(post.sharedPost.post_url)}
                       />
                     )}
 
@@ -135,7 +136,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                         height={350}
                       >
                         <source
-                          src={imageUrl + post.sharedPost.post_url}
+                          src={mediaUrl(post.sharedPost.post_url)}
                           type="video/mp4"
                         />
                       </video>
@@ -162,7 +163,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                     alt="image_post"
                     width={600}
                     height={400}
-                    src={imageUrl + post.post_url}
+                    src={mediaUrl(post.post_url)}
                   />
                 )}
 
@@ -173,7 +174,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                     width={600}
                     height={400}
                   >
-                    <source src={imageUrl + post.post_url} type="video/mp4" />
+                    <source src={mediaUrl(post.post_url)} type="video/mp4" />
                   </video>
                 )}
               </div>

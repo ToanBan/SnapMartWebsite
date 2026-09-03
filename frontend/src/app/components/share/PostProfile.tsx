@@ -37,6 +37,7 @@ const PostProfile = ({
   postsPublic: any[];
 }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
+  const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState("public");
   const [openPostId, setOpenPostId] = useState<string | null>(null);
@@ -206,7 +207,7 @@ const PostProfile = ({
                     alt="image_post"
                     width={600}
                     height={400}
-                    src={imageUrl + post.post_url}
+                        src={mediaUrl(post.post_url)}
                   />
                 )}
 
@@ -217,7 +218,7 @@ const PostProfile = ({
                     width={600}
                     height={400}
                   >
-                    <source src={imageUrl + post.post_url} type="video/mp4" />
+                    <source src={mediaUrl(post.post_url)} type="video/mp4" />
                     Trình duyệt của bạn không hỗ trợ thẻ video.
                   </video>
                 )}

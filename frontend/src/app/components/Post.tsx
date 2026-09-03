@@ -22,6 +22,7 @@ interface PostProps {
 }
 
 const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
+const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
 
 const DisplayEditPost = ({
   postEdit,
@@ -109,7 +110,7 @@ const DisplayEditPost = ({
                           }}
                         >
                           <Image
-                            src={`${imageUrl}${mediaPost}`}
+                            src={mediaUrl(mediaPost)}
                             alt="image_post"
                             fill
                             className="img-fluid rounded-3 shadow-sm object-cover media_post"
@@ -118,7 +119,7 @@ const DisplayEditPost = ({
                         </div>
                       ) : (
                         <video
-                          src={`${imageUrl}${mediaPost}`}
+                          src={mediaUrl(mediaPost)}
                           controls
                           className="img-fluid rounded-3 shadow-sm media_post"
                           defaultValue={`${postEdit.post_url}`}
@@ -356,7 +357,7 @@ const Posts = ({
                     alt="image_post"
                     width={600}
                     height={400}
-                    src={imageUrl + post.post_url}
+                    src={mediaUrl(post.post_url)}
                   />
                 )}
 
@@ -367,7 +368,7 @@ const Posts = ({
                     width={600}
                     height={400}
                   >
-                    <source src={imageUrl + post.post_url} type="video/mp4" />
+                    <source src={mediaUrl(post.post_url)} type="video/mp4" />
                     Trình duyệt của bạn không hỗ trợ thẻ video.
                   </video>
                 )}
