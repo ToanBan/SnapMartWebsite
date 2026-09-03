@@ -2,7 +2,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "embedding": "node schedule/runEmbedding.js"
+    "embedding": "node schedule/runEmbedding.js",
+    "seed:admin": "sequelize-cli db:seed --seed 20260903000000-create-admin.js --config config/config.js"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
