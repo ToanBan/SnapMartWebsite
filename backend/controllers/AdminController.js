@@ -171,6 +171,10 @@ const VerifyProduct = async (req, res, next) => {
     if (status === "approval") {
       product.status = "approved";
       await product.save();
+      const cachedProductPages = await redisClient.keys("products:approved:page:*");
+      if (cachedProductPages.length > 0) {
+        await redisClient.del(cachedProductPages);
+      }
       sendProductEmbedding(product);
     } else if (status === "rejected") {
       product.status = "rejected";
@@ -216,6 +220,10 @@ const GetProductsApproved = async (req, res, next) => {
       where: { status: "approved" },
       limit,
       offset,
+      order: [
+        ["createdAt", "DESC"],
+        ["id", "DESC"],
+      ],
       include: [
         {
           model: Business,

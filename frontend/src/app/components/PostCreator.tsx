@@ -15,7 +15,8 @@ const PostCreator = () => {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
         method: "POST",
@@ -24,10 +25,11 @@ const PostCreator = () => {
       });
 
       if (res.ok) {
-        e.currentTarget.reset();
+        form.reset();
         setShowModal(false);
-        router.refresh();
+        setIsSubmitting(false);
         setSuccess(true);
+        router.refresh();
         setTimeout(() => {
           setSuccess(false);
         }, 3000);
@@ -155,9 +157,9 @@ const PostCreator = () => {
         .creator-prompt:focus { background: #ecfeff; box-shadow: 0 0 0 3px rgba(6, 182, 212, .14); }
         .creator-action { flex: 1; justify-content: center; border-radius: 12px; color: #475569; font-size: .88rem; }
         .creator-action:hover { background: #f0fdfa; color: #0891b2; }
-        .post-modal-backdrop { position: fixed; inset: 0; z-index: 1060; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(15, 23, 42, .56); backdrop-filter: blur(8px); animation: fadeIn .2s ease; }
+        .post-modal-backdrop { position: fixed; inset: 0; z-index: 1060; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(15, 23, 42, .32); backdrop-filter: blur(4px); }
         .post-modal-dialog { width: 100%; max-width: 540px; margin: 0; animation: zoomIn .25s ease; }
-        .post-modal-content { overflow: hidden; border: 0; border-radius: 24px; box-shadow: 0 24px 70px rgba(15, 23, 42, .25); }
+        .post-modal-content { overflow: hidden; border: 0; border-radius: 24px; background: #fff; box-shadow: 0 24px 70px rgba(15, 23, 42, .25); }
         .post-modal-header { padding: 1.35rem 1.5rem; border-bottom: 1px solid #eef2f7; }
         .post-modal-eyebrow { color: #0891b2; font-size: .7rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
         .post-modal-close { display: grid; width: 36px; height: 36px; place-items: center; border-radius: 50%; color: #64748b; background: #f1f5f9; }
