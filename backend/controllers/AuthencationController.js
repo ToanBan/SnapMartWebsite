@@ -277,14 +277,21 @@ const ResetPasswordAccount = async (req, res, next) => {
 
 const CheckRoleUser = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
     const decoded = jwt.verify(token, process.env.ACCESS_TOKEN);
     const user = await User.findOne({ where: { id: decoded.id } });
+    if (!user || user.status !== "active") {
+      return res.status(403).json({ message: "Forbidden" });
+    }
     return res.status(200).json({
       message: user.role,
     });
   } catch (error) {
     console.error(error);
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 

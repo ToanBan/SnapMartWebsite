@@ -1,17 +1,16 @@
 import SidebarPage from "../components/share/Sidebar";
-import NavigationMain from "../components/share/NavigationMain";
-export default async function AdminLayout({
+import RoleGuard from "../components/share/RoleGuard";
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <RoleGuard role="admin">
       <div className="d-flex">
-        
         <SidebarPage />
         {children}
       </div>
-    </>
+    </RoleGuard>
   );
 }
