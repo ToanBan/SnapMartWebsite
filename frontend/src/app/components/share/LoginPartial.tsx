@@ -1,10 +1,16 @@
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons"; // Import envelope icon for verification
 "use client";
+
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faSignOutAlt, faBuilding, faBox} from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faSignOutAlt,
+  faBuilding,
+  faBox,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 import { useUser } from "@/hooks/useUser";
 const LoginPartial = () => {
   const { account, isLoading, isError, mutate } = useUser();
