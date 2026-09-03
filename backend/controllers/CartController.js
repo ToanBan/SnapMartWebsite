@@ -10,6 +10,7 @@ const GetCartItems = async (req, res, next) => {
           model: Product,
           as: "product",
           attributes: ["id", "productName", "price", "image", "description"],
+          required: true,
         },
       ],
     });

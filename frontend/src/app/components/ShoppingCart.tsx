@@ -45,7 +45,7 @@ const ShopCart = () => {
       </div>
       <div className="offcanvas-body">
         {cartItems.length > 0 ? (
-          cartItems.map((cartItem) => (
+          cartItems.filter((cartItem) => cartItem?.product).map((cartItem) => (
             <div
               key={cartItem.id}
               className="d-flex align-items-center justify-content-between p-2 mb-3 rounded border"

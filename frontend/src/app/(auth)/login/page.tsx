@@ -6,36 +6,53 @@ import Image from "next/image";
 import AlertError from "@/app/components/share/AlertError";
 const LoginPage = () => {
   const [error, setError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
-      method: "POST",
-      body: formData,
-      credentials: "include",
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/login`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      const data = await res.json();
 
-    if (res.ok) {
-      localStorage.setItem("role", data.role);
-      window.location.href = "/";
-    } else {
-      console.log(data);
+      if (res.ok) {
+        localStorage.setItem("role", data.role);
+        window.location.href = "/";
+      } else {
+        console.log(data);
+        setError(true);
+        setTimeout(() => setError(false), 3000);
+      }
+    } catch (requestError) {
+      console.error(requestError);
       setError(true);
-      setTimeout(() => setError(false), 3000);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleRedirectGoogle = async () => {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/google`, {
-      method: "GET",
-      credentials: "include",
-    });
-    if (res.status !== 200) {
-      console.error("không thể di chuyển đến google");
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/google`, {
+        method: "GET",
+        credentials: "include",
+      });
+      if (res.status !== 200) {
+        throw new Error("Không thể chuyển đến Google");
+      }
+      const data = await res.json();
+      window.location.href = data.message;
+    } catch (requestError) {
+      console.error(requestError);
+      setIsSubmitting(false);
     }
-    const data = await res.json();
-    window.location.href = data.message;
   };
 
   return (
@@ -119,8 +136,9 @@ const LoginPage = () => {
                   <button
                     className="btn btn-primary btn-lg text-uppercase fw-bold"
                     type="submit"
+                    disabled={isSubmitting}
                   >
-                    Sign in
+                    {isSubmitting ? "Đang đăng nhập..." : "Sign in"}
                   </button>
                 </div>
 
@@ -136,6 +154,7 @@ const LoginPage = () => {
                   <button
                     onClick={handleRedirectGoogle}
                     type="button"
+                    disabled={isSubmitting}
                     className="btn btn-outline-danger btn-lg d-flex align-items-center justify-content-center gap-2"
                   >
                     <Image

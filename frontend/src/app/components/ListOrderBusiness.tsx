@@ -90,7 +90,7 @@ const ListOrderBusiness = ({
             orders?.map((order, index) => (
               <tr key={order.id}>
                 <td>{index + 1}</td>
-                <td>{order.user.username}</td>
+                <td>{order.user?.username || "Unknown user"}</td>
                 <td>0312312312321</td>
                 <td>{order.total_amount} VNĐ</td>
                 <td>{order.status}</td>
@@ -180,7 +180,7 @@ const ListOrderBusiness = ({
                 style={{ maxHeight: "70vh", overflowY: "auto" }}
               >
                 <div className="d-flex flex-wrap gap-3 justify-content-start">
-                  {selectedOrder.items.map((item) => (
+                  {selectedOrder.items.filter((item) => item?.product).map((item) => (
                     <div
                       key={item.id}
                       className="card shadow-sm border-0"
@@ -192,7 +192,7 @@ const ListOrderBusiness = ({
                     >
                       <img
                         src={`${imageUrl}${item.product.image}`}
-                        alt={item.product.productName}
+                        alt={item.product?.productName || "Product"}
                         className="card-img-top"
                         style={{
                           width: "100%",
@@ -202,7 +202,7 @@ const ListOrderBusiness = ({
                       />
                       <div className="card-body">
                         <h6 className="card-title">
-                          {item.product.productName}
+                          {item.product?.productName || "Product unavailable"}
                         </h6>
                         <p className="card-text text-truncate">
                           {item.product.description}

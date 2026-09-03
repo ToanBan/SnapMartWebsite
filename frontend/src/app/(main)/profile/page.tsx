@@ -25,7 +25,7 @@ const ProfilePage = async () => {
   let posts = [];
   let sharePosts = [];
   try {
-    const res = await fetch("http://localhost:5000/api/posts", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
       method: "GET",
       headers: {
         Cookie: `token=${token}`,
@@ -42,7 +42,7 @@ const ProfilePage = async () => {
 
 
   try {
-    const res = await fetch("http://localhost:5000/api/posts/share", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts/share`, {
       method: "GET",
       headers: {
         Cookie: `token=${token}`,

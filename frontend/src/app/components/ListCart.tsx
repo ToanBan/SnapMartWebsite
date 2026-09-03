@@ -13,7 +13,9 @@ const ListCart = ({ carts }: { carts: any }) => {
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const [cartItems, setCartItems] = useState(carts);
+  const [cartItems, setCartItems] = useState(
+    (carts || []).filter((cartItem: any) => cartItem?.product),
+  );
   const [address, setAdress] = useState("");
   const [phone, setPhone] = useState("");
   const [method, setMethod] = useState("cod");
@@ -30,8 +32,8 @@ const ListCart = ({ carts }: { carts: any }) => {
     Partial<{ [key: string]: number }>
   >(() => {
     const initPriceItem: Partial<{ [key: string]: number }> = {};
-    carts.forEach((cartItem: any) => {
-      initPriceItem[cartItem.id] = cartItem.product.price;
+    (carts || []).forEach((cartItem: any) => {
+      if (cartItem?.product) initPriceItem[cartItem.id] = cartItem.product.price;
     });
     return initPriceItem;
   });
@@ -40,8 +42,8 @@ const ListCart = ({ carts }: { carts: any }) => {
     [key: string]: number;
   }>(() => {
     const initialQuantities: { [key: string]: number } = {};
-    carts.forEach((cartItem: any) => {
-      initialQuantities[cartItem.id] = 1;
+    (carts || []).forEach((cartItem: any) => {
+      if (cartItem?.product) initialQuantities[cartItem.id] = 1;
     });
     return initialQuantities;
   });
@@ -171,7 +173,7 @@ const ListCart = ({ carts }: { carts: any }) => {
         </div>
 
         {cartItems && cartItems.length > 0 ? (
-          cartItems.map((cartItem: any) => (
+          cartItems.filter((cartItem: any) => cartItem?.product).map((cartItem: any) => (
             <div key={cartItem.id} className="row py-4 border-top">
               {/* Checkbox */}
               <div className="col-1 d-flex align-items-start pt-2">
@@ -183,7 +185,7 @@ const ListCart = ({ carts }: { carts: any }) => {
                   onChange={() =>
                     toggleSelect(
                       cartItem.id,
-                      cartItem.product.price,
+                      cartItem.product?.price || cartItem.price,
                       itemQuantities[cartItem.id] || 1
                     )
                   }
@@ -197,8 +199,8 @@ const ListCart = ({ carts }: { carts: any }) => {
                   className="img-fluid d-none d-md-block"
                   width={300}
                   height={300}
-                  alt={cartItem.product.productName}
-                  src={`${imageUrl}${cartItem.product.image}`}
+                  alt={cartItem.product?.productName || "Product"}
+                  src={`${imageUrl}${cartItem.product?.image || ""}`}
                 />
                 {/* <img
                   src="https://i.ibb.co/TTnzMTf/Rectangle-21.png"
@@ -209,10 +211,10 @@ const ListCart = ({ carts }: { carts: any }) => {
 
               {/* Thông tin */}
               <div className="col-md-8 d-flex flex-column justify-content-center">
-                <p className="small text-muted mb-1">#{cartItem.product.id}</p>
+                <p className="small text-muted mb-1">#{cartItem.product?.id}</p>
 
                 <div className="d-flex justify-content-between align-items-center">
-                  <p className="fw-bold mb-0">{cartItem.product.productName}</p>
+                  <p className="fw-bold mb-0">{cartItem.product?.productName || "Product unavailable"}</p>
 
                   {/* Nút tăng giảm số lượng */}
                   <div className="btn-group rounded-4 shadow-sm" role="group">

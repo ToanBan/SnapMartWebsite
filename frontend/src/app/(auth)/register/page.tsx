@@ -36,8 +36,10 @@ const RegisterPage = ({ message }: { message: string }) => {
     Record<string, string>
   >({});
   const [error, setError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
     const formData = new FormData(e.target as HTMLFormElement);
     const values = Object.fromEntries(formData.entries());
     const result = RegisterSchema.safeParse(values);
@@ -49,6 +51,7 @@ const RegisterPage = ({ message }: { message: string }) => {
       setValidationError(errors);
       return;
     }
+    setIsSubmitting(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
         method: "POST",
@@ -68,6 +71,8 @@ const RegisterPage = ({ message }: { message: string }) => {
     } catch (error) {
       console.log(error);
       return;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -182,8 +187,9 @@ const RegisterPage = ({ message }: { message: string }) => {
                   <button
                     className="btn btn-primary btn-lg text-uppercase fw-bold"
                     type="submit"
+                    disabled={isSubmitting}
                   >
-                    Sign Up
+                    {isSubmitting ? "Đang đăng ký..." : "Sign Up"}
                   </button>
                 </div>
 

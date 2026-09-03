@@ -4,13 +4,18 @@ import Image from "next/image";
 import { Video, Image as ImageIcon, Smile, X } from "lucide-react";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
+import { useRouter } from "next/navigation";
 const PostCreator = () => {
   const [showModal, setShowModal] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const AddPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const formData = new FormData(e.currentTarget);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`, {
@@ -20,6 +25,9 @@ const PostCreator = () => {
       });
 
       if (res.ok) {
+        e.currentTarget.reset();
+        setShowModal(false);
+        router.refresh();
         setSuccess(true);
         setTimeout(() => {
           setSuccess(false);
@@ -32,7 +40,8 @@ const PostCreator = () => {
       }
     } catch (error) {
       console.error(error);
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -78,6 +87,7 @@ const PostCreator = () => {
               <div className="modal-header d-flex justify-content-between">
                 <h5 className="modal-title fw-bold">Create Post</h5>
                 <button
+                  type="button"
                   className="btn btn-light rounded-circle"
                   onClick={() => setShowModal(false)}
                 >
@@ -108,13 +118,14 @@ const PostCreator = () => {
 
                   <div className="d-flex justify-content-end mt-3 gap-3">
                     <button
+                      type="button"
                       className="btn btn-secondary"
                       onClick={() => setShowModal(false)}
                     >
                       Cancel
                     </button>
-                    <button type="submit" className="btn btn-primary">
-                      Post
+                    <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
+                      {isSubmitting ? "Đang đăng..." : "Post"}
                     </button>
                   </div>
                 </form>

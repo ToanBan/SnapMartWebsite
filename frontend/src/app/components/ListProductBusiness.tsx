@@ -31,6 +31,7 @@ const ListProductBusiness = ({
   const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [page, setPage] = useState(1);
   const [addedProducts, setAddedProducts] = useState<ProductsProps[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     setProducts([...(productsBusiness ?? []), ...addedProducts]);
@@ -72,11 +73,19 @@ const ListProductBusiness = ({
   };
 
   const handleAddProduct = async (e: React.FormEvent<HTMLFormElement>) => {
-    const result = await AddProducts(e);
-    if (result) {
-      Swal.fire("Đã Thêm!", "Sản phẩm đã được thêm thành công.", "success");
-      SendNotification("", "ADD_PRODUCT", "Vừa Mới Thêm Sản Phẩm");
-      return result;
+    if (isSubmitting) return null;
+    setIsSubmitting(true);
+    try {
+      const result = await AddProducts(e);
+      if (result) {
+        Swal.fire("Đã Thêm!", "Sản phẩm đã được thêm thành công.", "success");
+        SendNotification("", "ADD_PRODUCT", "Vừa Mới Thêm Sản Phẩm");
+        return result;
+      }
+      await Swal.fire("Lỗi!", "Không thể thêm sản phẩm.", "error");
+      return null;
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -253,9 +262,11 @@ const ListProductBusiness = ({
                       }
                     } else {
                       const res = await handleAddProduct(e);
-                      setAddedProducts((prev) => [res, ...prev]);
-                      setProducts((prev) => [res, ...prev]);
-                      setShowModal(false);
+                      if (res) {
+                        setAddedProducts((prev) => [res, ...prev]);
+                        setProducts((prev) => [res, ...prev]);
+                        setShowModal(false);
+                      }
                     }
                   }}
                 >
@@ -335,13 +346,18 @@ const ListProductBusiness = ({
                     </button>
                     <button
                       type="submit"
+                      disabled={isSubmitting}
                       className="btn btn-gradient rounded-pill px-4 fw-semibold"
                       style={{
                         background: "linear-gradient(90deg, #6C63FF, #9A8CFF)",
                         color: "white",
                       }}
                     >
-                      {isEditMode ? "Lưu Thay Đổi" : "Lưu Sản Phẩm"}
+                      {isSubmitting
+                        ? "Đang lưu..."
+                        : isEditMode
+                          ? "Lưu Thay Đổi"
+                          : "Lưu Sản Phẩm"}
                     </button>
                   </div>
                 </form>

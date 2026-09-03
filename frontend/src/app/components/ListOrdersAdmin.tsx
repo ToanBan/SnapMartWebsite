@@ -144,7 +144,7 @@ const ListOrdersAdmin = ({ orders = [] }: { orders?: OrderProps[] }) => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {order.items.map((item) => (
+                                  {order.items.filter((item) => item?.product).map((item) => (
                                     <tr key={item.id}>
                                       <td className="px-3 py-2">
                                         <small className="text-muted fw-medium">
@@ -154,11 +154,11 @@ const ListOrdersAdmin = ({ orders = [] }: { orders?: OrderProps[] }) => {
                                       <td className="px-3 py-2">
                                         <div className="d-flex align-items-center">
                                           <div className="product-img-placeholder me-3">
-                                            {item.product.productName.includes(
+                                            {item.product?.productName?.includes(
                                               "MacBook"
                                             ) ? (
                                               <Laptop size={16} />
-                                            ) : item.product.productName.includes(
+                                            ) : item.product?.productName?.includes(
                                                 "AirPods"
                                               ) ? (
                                               <Headphones size={16} />
@@ -167,7 +167,7 @@ const ListOrdersAdmin = ({ orders = [] }: { orders?: OrderProps[] }) => {
                                             )}
                                           </div>
                                           <span className="fw-medium text-dark">
-                                            {item.product.productName}
+                                            {item.product?.productName || "Product unavailable"}
                                           </span>
                                         </div>
                                       </td>

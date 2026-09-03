@@ -26,7 +26,7 @@ const OrderPageDetail = async ({
                     <h5 className="fw-bold mb-4">Sản phẩm đã mua</h5>
 
                     {order.items.length !== 0 ? (
-                      order.items.map((item: any) => (
+                      order.items.filter((item: any) => item?.product).map((item: any) => (
                         <div
                           key={item.id}
                           className="product-item d-flex align-items-center"
@@ -36,11 +36,11 @@ const OrderPageDetail = async ({
                             height={100}
                             src={`${imageUrl}${item.product.image}`}
                             className="product-img me-3"
-                            alt={item.product.productName}
+                            alt={item.product?.productName || "Product"}
                           ></Image>
                           <div className="flex-grow-1">
                             <h6 className="mb-1 fw-bold">
-                              {item.product.productName}
+                              {item.product?.productName || "Product unavailable"}
                             </h6>
                             <p className="small text-muted mb-0">
                               Màu: Trắng bạc
@@ -72,7 +72,7 @@ const OrderPageDetail = async ({
                       <div className="card border-0 bg-light p-3">
                         <p className="info-label">Người nhận</p>
                         <p className="info-value mb-3">
-                          {order.user.username} - {order.phone_number}
+                          {order.user?.username || "Unknown user"} - {order.phone_number}
                         </p>
 
                         <p className="info-label">Địa chỉ</p>

@@ -201,9 +201,9 @@ const SuccessPage = async ({
               </div>
             </div>
 
-            {order?.items?.map((item: any) => (
+            {order?.items?.filter((item: any) => item?.product).map((item: any) => (
               <div key={item.id} className="item-row">
-                <span>{item.product.productName}</span>
+                <span>{item.product?.productName || "Product unavailable"}</span>
                 <span className="fw-bold text-dark">
                   {item.price.toLocaleString("vi-VN", {
                     style: "currency",
