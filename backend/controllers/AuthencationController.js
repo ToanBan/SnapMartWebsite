@@ -195,10 +195,11 @@ const RefreshToken = async (req, res, next) => {
       process.env.ACCESS_TOKEN,
       { expiresIn: "30m" },
     );
+    const isProduction = process.env.NODE_ENV === "production";
     res.cookie("token", newAccessToken, {
       httpOnly: true,
-      secure: false,
-      sameSite: "Lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
       path: "/",
     });
     return res.status(200).json({ message: newAccessToken });

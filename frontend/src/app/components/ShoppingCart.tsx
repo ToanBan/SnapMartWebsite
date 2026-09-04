@@ -2,13 +2,29 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
-import { subscribeCart, notifyCartChange } from "@/hooks/cartEvent";
+import { subscribeCart } from "@/hooks/cartEvent";
+
+type CartItem = {
+  id: string | number;
+  price: number;
+  product?: {
+    productName: string;
+  };
+};
+
 const ShopCart = () => {
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const fetchCart = async () => {
     try {
-      const res = await fetch("/api/users");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/carts`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (!res.ok) {
+        setCartItems([]);
+        return;
+      }
       const data = await res.json();
       setCartItems(data.message || []);
       localStorage.setItem("count", data.count);
@@ -20,7 +36,7 @@ const ShopCart = () => {
 
   useEffect(() => {
     fetchCart(); 
-    const unsub = subscribeCart((count) => {
+    const unsub = subscribeCart(() => {
       fetchCart();
     });
     return () => unsub();
@@ -56,12 +72,12 @@ const ShopCart = () => {
                   style={{ minWidth: 80 }}
                 >
                   <small className="d-block">
-                    {cartItem.product.productName}
+                    {cartItem?.product?.productName}
                   </small>
                 </div>
                 <div>
                   <div className="fw-semibold">
-                    {cartItem.product.productName}
+                    {cartItem?.product?.productName}
                   </div>
                   <div className="text-muted">
                     {cartItem.price.toLocaleString("vi-VN", {
