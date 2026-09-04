@@ -8,6 +8,7 @@ import ConfirmRemove from "./share/ConfirmRemove";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
 import { useRouter } from "next/navigation";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface PostProps {
   id: string;
   post_url: string | null;
@@ -21,8 +22,7 @@ interface PostProps {
   updatedAt: string;
 }
 
-const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
-const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
+const mediaUrl = (fileName: string) => getMediaUrl(fileName);
 
 const DisplayEditPost = ({
   postEdit,
@@ -297,7 +297,7 @@ const Posts = ({
                     height={50}
                     src={
                       post.user.avatar
-                        ? `${imageUrl}${post.user.avatar}`
+                        ? getMediaUrl(post.user.avatar)
                         : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
                     }
                   />

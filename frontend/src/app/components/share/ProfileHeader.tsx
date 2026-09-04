@@ -4,6 +4,7 @@ import Image from "next/image";
 import SettingProfile from "./SettingProfile";
 import { useUser } from "@/hooks/useUser";
 import SendNotification from "@/app/api/users/SendNotification";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface CountFollowProps {
   follower: string;
   following: string;
@@ -20,7 +21,6 @@ const ProfileHeader = ({
   profileId?: string;
   countFollow?: CountFollowProps;
 }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const userHookResult = useUser(initialAccount);
   const { account, isLoading, isError } = isOwnProfile
     ? userHookResult
@@ -111,7 +111,7 @@ const ProfileHeader = ({
   return (
     <div className="profile-header d-flex flex-column align-items-center text-center">
       <Image
-        src={`${account.avatar ? `${imageUrl}${account.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
+        src={account.avatar ? getMediaUrl(account.avatar) : "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png"}
         alt="avatar-profile"
         width={70}
         height={70}

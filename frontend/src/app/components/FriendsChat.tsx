@@ -6,6 +6,7 @@ import { Send, Paperclip } from "lucide-react";
 import socket from "../../lib/socket";
 import UploadsFile from "../api/users/UploadsFile";
 import SendNotification from "../api/users/SendNotification";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface FriendsProps {
   following: {
     id: string;
@@ -30,7 +31,6 @@ const GetFriend = () => {
     null
   );
   const [showChat, setShowChat] = useState(false);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [content, setContent] = useState("");
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -135,7 +135,7 @@ const GetFriend = () => {
                   <Image
                     src={
                       friend.following.avatar
-                        ? `${imageUrl}${friend.following.avatar}`
+                        ? getMediaUrl(friend.following.avatar)
                         : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
                     }
                     alt="avatar-profile"
@@ -180,7 +180,7 @@ const GetFriend = () => {
             <Image
               src={
                 selectedFriend.following.avatar
-                  ? `${imageUrl}${selectedFriend.following.avatar}`
+                  ? getMediaUrl(selectedFriend.following.avatar)
                   : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
               }
               alt="friend-avatar"
@@ -229,7 +229,7 @@ const GetFriend = () => {
                   >
                     {msg.type === "file" ? (
                       <a
-                        href={`${imageUrl}api/download/${msg.content}`}
+                        href={getMediaUrl(msg.content)}
                         download
                         target="_blank"
                         rel="noopener noreferrer"

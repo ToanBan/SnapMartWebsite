@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import HandleStatusOrder from "@/app/api/business/HandleStatusOrder";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface ProductProps {
   id: number;
   quantity: number;
@@ -39,7 +40,6 @@ const ListOrderBusiness = ({
   );
   const [success, setSucess] = useState(false);
   const [error, setError] = useState(false);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   useEffect(()=>{
     setOrders(ordersBusiness)
@@ -191,7 +191,7 @@ const ListOrderBusiness = ({
                       }}
                     >
                       <img
-                        src={`${imageUrl}${item.product.image}`}
+                        src={getMediaUrl(item.product.image)}
                         alt={item.product?.productName || "Product"}
                         className="card-img-top"
                         style={{

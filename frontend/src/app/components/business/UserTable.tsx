@@ -22,7 +22,6 @@ interface DataProps {
 
 const UserTable = ({ data }: { data: DataProps[] }) => {
   const [selectedUser, setSelectedUser] = useState<DataProps | null>(null);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   return (
     <>
@@ -104,7 +103,6 @@ const UserTable = ({ data }: { data: DataProps[] }) => {
         <ModalProduct
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
-          imageUrl={imageUrl}
         />
       )}
       <style>{`

@@ -280,7 +280,7 @@ const UploadFile = async (req, res, next) => {
     if (file) {
       return res.status(200).json({
         success: true,
-        fileName: req.file.filename,
+        fileName: req.file.path,
       });
     } else {
       return res.status(200).json({
@@ -295,6 +295,12 @@ const UploadFile = async (req, res, next) => {
 const DownloadFile = async (req, res, next) => {
   try {
     const filename = req.params.filename;
+
+    // Nếu filename là URL đầy đủ (Cloudinary / http/https) → chuyển hướng trực tiếp.
+    if (/^https?:\/\//i.test(filename)) {
+      return res.redirect(302, filename);
+    }
+
     path.join(__dirname, "../generate/encode_query.py");
     const filePath = path.join(__dirname, "../uploads", filename);
     if (!fs.existsSync(filePath)) {

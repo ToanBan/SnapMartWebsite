@@ -1,14 +1,13 @@
 import React from "react";
 import { Package, X, Eye, ShoppingCart, TrendingUp } from "lucide-react";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ModalProduct = ({
   user,
   onClose,
-  imageUrl,
 }: {
   user: any;
   onClose: any;
-  imageUrl: string;
 }) => {
   if (!user) return null;
 
@@ -88,7 +87,7 @@ const ModalProduct = ({
                               width={100}
                               height={100}
                               className="w-100 h-100 object-fit-cover"
-                              src={`${imageUrl}${product.productImage}`}
+                              src={getMediaUrl(product.productImage)}
                               alt={`${product.productName}`}
                             ></Image>
                           </div>

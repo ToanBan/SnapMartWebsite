@@ -4,8 +4,7 @@ const bcrypt = require("bcrypt");
 const redisClient = require("../extensions/redis");
 const jwt = require("jsonwebtoken");
 const { where, Op } = require("sequelize");
-const path = require("path");
-const fs = require("fs");
+const { deleteCloudinaryAsset } = require("../extensions/cloudinary");
 const GetAccount = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -427,12 +426,9 @@ const EditProfile = async (req, res, next) => {
     const image = req.file;
     let imageName;
     if (image) {
-      imageName = image.filename;
+      imageName = image.path;
       if (user.avatar) {
-        const imagePath = path.join(__dirname, "../uploads", user.avatar);
-        if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath);
-        }
+        await deleteCloudinaryAsset(user.avatar);
       }
     }
 

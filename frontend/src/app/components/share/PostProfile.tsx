@@ -12,6 +12,7 @@ import ReportPort from "@/app/api/users/ReportPort";
 import AlertSuccess from "./AlertSuccess";
 import { success } from "zod";
 import PostCreator from "../PostCreator";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface PostProps {
   id: string;
   post_url: string | null;
@@ -36,8 +37,7 @@ const PostProfile = ({
   initialPosts: PostProps[];
   postsPublic: any[];
 }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
-  const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
+  const mediaUrl = (fileName: string) => getMediaUrl(fileName);
   const [commentPostId, setCommentPostId] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState("public");
   const [openPostId, setOpenPostId] = useState<string | null>(null);
@@ -176,7 +176,7 @@ const PostProfile = ({
                     alt="avatar"
                     width={50}
                     height={50}
-                    src={`${post.user.avatar ? `${imageUrl}${post.user.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
+                    src={post.user.avatar ? getMediaUrl(post.user.avatar) : "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png"}
                   />
                   <div>
                     <h5 className="username">{post.user.username}</h5>

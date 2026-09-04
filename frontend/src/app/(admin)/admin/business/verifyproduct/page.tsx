@@ -5,6 +5,7 @@ import VerifyProduct from "@/app/api/admin/VerifyProducts";
 import AlertSuccess from "@/app/components/share/AlertSuccess";
 import AlertError from "@/app/components/share/AlertError";
 import SendNotification from "@/app/api/users/SendNotification";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface ProductsProps {
   id: string;
   productName: string;
@@ -15,7 +16,6 @@ interface ProductsProps {
 }
 
 const VerifyProductPage = () => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [products, setProducts] = useState<ProductsProps[]>([]);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -106,7 +106,7 @@ const VerifyProductPage = () => {
                         <img
                           src={
                             product.image
-                              ? `${imageUrl}${product.image}`
+                              ? getMediaUrl(product.image)
                               : "/default-image.png"
                           }
                           alt={product.productName}

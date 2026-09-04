@@ -5,6 +5,7 @@ import DeleteProduct from "@/app/api/business/DeleteProduct";
 import EditProduct from "@/app/api/business/EditProduct";
 import Swal from "sweetalert2";
 import SendNotification from "../api/users/SendNotification";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface ProductsProps {
   id: string;
   productName: string;
@@ -28,7 +29,6 @@ const ListProductBusiness = ({
   );
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [page, setPage] = useState(1);
   const [addedProducts, setAddedProducts] = useState<ProductsProps[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -155,7 +155,7 @@ const ListProductBusiness = ({
                         <img
                           src={
                             product?.image
-                              ? `${imageUrl}${product.image}`
+                              ? getMediaUrl(product.image)
                               : "/default-image.png"
                           }
                           alt={product.productName}

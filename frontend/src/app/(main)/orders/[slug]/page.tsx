@@ -2,6 +2,7 @@ import React from "react";
 import GetOrdersDetail from "@/app/api/users/GetOrderDetail";
 import Image from "next/image";
 import TrackingOrder from "@/app/components/TrackingOrder";
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 const OrderPageDetail = async ({
   params,
@@ -10,7 +11,6 @@ const OrderPageDetail = async ({
 }) => {
   const { slug } = await params;
   const order = await GetOrdersDetail(slug);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   return (
     <>
@@ -34,7 +34,7 @@ const OrderPageDetail = async ({
                           <Image
                             width={100}
                             height={100}
-                            src={`${imageUrl}${item.product.image}`}
+                            src={getMediaUrl(item.product.image)}
                             className="product-img me-3"
                             alt={item.product?.productName || "Product"}
                           ></Image>

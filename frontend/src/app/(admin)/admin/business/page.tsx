@@ -6,6 +6,7 @@ import Image from "next/image";
 import VerifyProduct from "@/app/api/admin/VerifyProducts";
 import AlertSuccess from "@/app/components/share/AlertSuccess";
 import AlertError from "@/app/components/share/AlertError";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface Product {
   id: string;
   productName: string;
@@ -30,7 +31,6 @@ interface BusinessProduct {
 }
 
 const BusinessPage = () => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [businesses, setBusinesses] = useState<BusinessProduct[]>([]);
   const [expandedBusinessId, setExpandedBusinessId] = useState<string | null>(
     null
@@ -124,7 +124,7 @@ const BusinessPage = () => {
                             alt={business.businessName}
                             src={
                               business.logo
-                                ? `${imageUrl}${business.logo}`
+                                ? getMediaUrl(business.logo)
                                 : "https://img.freepik.com/free-vector/add-new-user_78370-4710.jpg?semt=ais_hybrid&w=740&q=80"
                             }
                           ></Image>
@@ -175,7 +175,7 @@ const BusinessPage = () => {
                                         <img
                                           src={
                                             product.image
-                                              ? `${imageUrl}${product.image}`
+                                              ? getMediaUrl(product.image)
                                               : "/default-image.png"
                                           }
                                           alt={product.productName}

@@ -1,14 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 interface ProfileProps {
   id: string;
   username: string;
   avatar: string;
 }
-
-const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
 const SearchProfileClient = ({
   query,
@@ -60,7 +59,7 @@ const SearchProfileClient = ({
                 height={50}
                 className="img-fluid rounded-circle mb-4 mx-auto"
                 style={{ width: "112px", height: "112px", objectFit: "cover" }}
-                src={`${profile.avatar ? `${imageUrl}${profile.avatar}` : `https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png`}`}
+                src={profile.avatar ? getMediaUrl(profile.avatar) : "https://images.icon-icons.com/1378/PNG/512/avatardefault_92824.png"}
                 alt="avatar-profile"
               />
               <h3 className="h5 fw-bold text-dark mb-4">{profile.username}</h3>

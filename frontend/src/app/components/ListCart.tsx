@@ -8,9 +8,9 @@ import AlertError from "./share/AlertError";
 import { notifyCartChange } from "@/hooks/cartEvent";
 import RedirectTransaction from "../api/users/RedirectTransaction";
 import { useRouter } from "next/navigation";
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 const ListCart = ({ carts }: { carts: any }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [cartItems, setCartItems] = useState(
@@ -200,7 +200,7 @@ const ListCart = ({ carts }: { carts: any }) => {
                   width={300}
                   height={300}
                   alt={cartItem.product?.productName || "Product"}
-                  src={`${imageUrl}${cartItem.product?.image || ""}`}
+                  src={getMediaUrl(cartItem.product?.image)}
                 />
                 {/* <img
                   src="https://i.ibb.co/TTnzMTf/Rectangle-21.png"

@@ -5,6 +5,7 @@ import Image from "next/image";
 import ChatBusiness from "@/app/components/ChatBusiness";
 import ListProductByBusiness from "@/app/components/ListProductByBusiness";
 import GetProductsByBusiness from "@/app/api/business/GetProductsByBusiness";
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ShopOfBusiness = async ({
   params,
   searchParams,
@@ -14,7 +15,6 @@ const ShopOfBusiness = async ({
 }) => {
   const { slug } = await params;
   const data = await GetSeekShop(slug);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const page = Number(searchParams.page) || 1;
 
   const products = await GetProductsByBusiness(slug, page);
@@ -47,7 +47,7 @@ const ShopOfBusiness = async ({
               <img
                 className="img-fluid hero-image"
                 alt={`${data.businessName}`}
-                src={`${imageUrl}${data.verificationDocument}`}
+                src={getMediaUrl(data.verificationDocument)}
               />
             </div>
           </div>

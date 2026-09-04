@@ -10,10 +10,9 @@ const bcrypt = require("bcrypt");
 const redisClient = require("../extensions/redis");
 const jwt = require("jsonwebtoken");
 const { where, or, Sequelize, Op } = require("sequelize");
-const path = require("path");
-const fs = require("fs");
 const message = require("../models/message");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { deleteCloudinaryAsset } = require("../extensions/cloudinary");
 
 const CheckTeacherId = async (req, res, next) => {
   try {
@@ -43,8 +42,8 @@ const RegisterBusiness = async (req, res, next) => {
     const { businessName, taxCode, phone, address, description, email } =
       req.body;
 
-    const logo = req.files?.logo ? req.files.logo[0].filename : null;
-    const licence = req.files?.licence ? req.files.licence[0].filename : null;
+    const logo = req.files?.logo ? req.files.logo[0].path : null;
+    const licence = req.files?.licence ? req.files.licence[0].path : null;
 
     if (
       !businessName ||
@@ -114,7 +113,7 @@ const AddProduct = async (req, res, next) => {
     const productPath = req.file;
     let productFileName;
     productPath
-      ? (productFileName = productPath.filename)
+      ? (productFileName = productPath.path)
       : (productFileName = null);
     const businessId = req.business.id;
 
@@ -184,14 +183,7 @@ const DeleteProductById = async (req, res, next) => {
     }
 
     if (product.image) {
-      const imagePath = path.join(__dirname, "../uploads", product.image);
-      fs.access(imagePath, fs.constants.F_OK, (err) => {
-        if (!err) {
-          fs.unlink(imagePath, (err) => {
-            if (err) console.error("Error deleting product image:", err);
-          });
-        }
-      });
+      await deleteCloudinaryAsset(product.image);
     }
     await product.destroy();
     return res.status(200).json({
@@ -222,19 +214,12 @@ const EditProductById = async (req, res, next) => {
     const productPath = req.file;
     let productFileName;
     productPath
-      ? (productFileName = productPath.filename)
+      ? (productFileName = productPath.path)
       : (productFileName = null);
 
     if (productFileName && product.image) {
-      const oldImagePath = path.join(__dirname, "../uploads", product.image);
-      console.log("Old image path:", oldImagePath);
-      fs.access(oldImagePath, fs.constants.F_OK, (err) => {
-        if (!err) {
-          fs.unlink(oldImagePath, (err) => {
-            if (err) console.error("Error deleting old image:", err);
-          });
-        }
-      });
+      console.log("Old product image:", product.image);
+      await deleteCloudinaryAsset(product.image);
     }
     const updateProduct = await product.update({
       productName: productName || product.productName,

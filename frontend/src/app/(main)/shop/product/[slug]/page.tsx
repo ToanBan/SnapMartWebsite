@@ -5,13 +5,13 @@ import Image from "next/image";
 import TrackProductView from "@/app/components/TrackProductView";
 import Link from "next/link";
 import ProductDetailActions from "@/app/components/ProductDetailActions";
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ProductDetail = async ({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) => {
   const { slug } = await params;
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const product = await GetProductDetail(slug);
   console.log(product);
   return (
@@ -25,7 +25,7 @@ const ProductDetail = async ({
             <div className="col-md-6 text-center">
               <img
                 className={`main-image w-100 mb-3 shadow-sm ${styles.mainImage}`}
-                src={`${imageUrl}${product.image}`}
+                src={getMediaUrl(product.image)}
                 alt={product.productName}
               />
             </div>

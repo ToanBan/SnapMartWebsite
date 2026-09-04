@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface UserInfo {
   avatar: string;
   username: string;
@@ -32,8 +33,7 @@ interface PostProps {
 }
 
 const SharePost = ({ posts }: { posts: PostProps[] }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
-  const mediaUrl = (fileName: string) => `${imageUrl}${encodeURIComponent(fileName)}`;
+  const mediaUrl = (fileName: string) => getMediaUrl(fileName);
 
   return (
     <div
@@ -53,7 +53,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                   height={50}
                   src={
           post.user.avatar
-            ? `${imageUrl}${post.user.avatar}`
+            ? getMediaUrl(post.user.avatar)
             : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
         }
                   
@@ -97,7 +97,7 @@ const SharePost = ({ posts }: { posts: PostProps[] }) => {
                    
                      src={
           post.sharedPost.user.avatar
-            ? `${imageUrl}${post.sharedPost.user.avatar}`
+            ? getMediaUrl(post.sharedPost.user.avatar)
             : "https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png"
         }
                   />

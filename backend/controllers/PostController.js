@@ -3,10 +3,9 @@ const bcrypt = require("bcrypt");
 const redisClient = require("../extensions/redis");
 const jwt = require("jsonwebtoken");
 const { where, fn, col, Op } = require("sequelize");
-const path = require("path");
-const fs = require("fs");
 const { faker, de } = require("@faker-js/faker");
 const { type } = require("os");
+const { deleteCloudinaryAsset } = require("../extensions/cloudinary");
 const AddPost = async (req, res, next) => {
   try {
     const userId = req.user.id;
@@ -19,7 +18,7 @@ const AddPost = async (req, res, next) => {
     if (filePath) {
       const mimetype = filePath.mimetype.split("/")[0];
       typeFile = mimetype;
-      fileName = filePath.filename;
+      fileName = filePath.path;
     } else {
       typeFile = "none";
     }
@@ -122,11 +121,8 @@ const DeletePostUser = async (req, res, next) => {
     }
 
     if (oldPost.type !== "none") {
-      const oldFilePath = path.join(__dirname, "../uploads", oldPost.post_url);
-      console.log("test tại chỗ này", oldFilePath);
-      if (fs.existsSync(oldFilePath)) {
-        fs.unlinkSync(oldFilePath);
-      }
+      console.log("Xóa file post:", oldPost.post_url);
+      await deleteCloudinaryAsset(oldPost.post_url);
     }
 
     const deletePost = await Post.destroy({
@@ -164,7 +160,7 @@ const EditPostUser = async (req, res, next) => {
     let typeFilePath;
     const oldPostPath = oldPost.type;
     if (filePath) {
-      currentFileName = filePath.filename;
+      currentFileName = filePath.path;
       const mimeType = filePath.mimetype.split("/")[0];
 
       if (mimeType === "image") {
@@ -176,26 +172,12 @@ const EditPostUser = async (req, res, next) => {
       }
 
       if (oldPostPath === "image" || oldPostPath === "video") {
-        const oldFilePath = path.join(
-          __dirname,
-          "../uploads",
-          oldPost.post_url,
-        );
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
-        }
+        await deleteCloudinaryAsset(oldPost.post_url);
       }
     } else {
       if (oldPostPath === "image" || oldPostPath === "video") {
         typeFilePath = "none";
-        const oldFilePath = path.join(
-          __dirname,
-          "../uploads",
-          oldPost.post_url,
-        );
-        if (fs.existsSync(oldFilePath)) {
-          fs.unlinkSync(oldFilePath);
-        }
+        await deleteCloudinaryAsset(oldPost.post_url);
       }
     }
 

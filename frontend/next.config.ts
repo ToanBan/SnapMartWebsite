@@ -15,6 +15,7 @@ const nextConfig = {
       { protocol: 'https', hostname: 'images.pexels.com' },
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
       { protocol: 'https', hostname: 'snapmartwebsite.onrender.com', pathname: '/uploads/**' },
+      { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },
       { protocol: 'https', hostname: 'www.flaticon.com' },
       { protocol: 'https', hostname: 'hips.hearstapps.com' },
       {

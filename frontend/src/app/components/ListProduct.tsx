@@ -6,8 +6,8 @@ import AddCart from "../api/users/AddCart";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
 import { notifyCartChange } from "@/hooks/cartEvent";
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ListProduct = ({ products }: { products: any }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const [addingProductId, setAddingProductId] = useState<string | null>(null);
@@ -40,7 +40,7 @@ const ListProduct = ({ products }: { products: any }) => {
                 <div className="product-img-wrapper">
                 <img
                   style={{ width: "250px", height: "250px", objectFit: "cover" }}
-                  src={`${imageUrl}${product.image}`}
+                  src={getMediaUrl(product.image)}
                   alt={`${product.productName}`}
                 />
                 </div>

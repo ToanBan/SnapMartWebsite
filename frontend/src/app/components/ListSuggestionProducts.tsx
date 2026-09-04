@@ -8,9 +8,9 @@ import { notifyCartChange } from "@/hooks/cartEvent";
 import GetProductsSuggesion from "../api/users/GetProductsSuggesion";
 import AlertSuccess from "./share/AlertSuccess";
 import AlertError from "./share/AlertError";
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ListSuggestionProducts = () => {
   const [products, setProducts] = useState<any[]>([]);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
@@ -67,7 +67,7 @@ const ListSuggestionProducts = () => {
               <div className="card product-card rounded-3 shadow-sm h-100">
                 <div className="position-relative overflow-hidden rounded-top-3">
                   <img
-                    src={`${imageUrl}${product.image}`}
+                    src={getMediaUrl(product.image)}
                     alt={product.productName}
                     width={200}
                     height={200}

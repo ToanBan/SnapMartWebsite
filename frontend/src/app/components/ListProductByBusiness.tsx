@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import AddCart from "../api/users/AddCart";
 import { useState } from "react";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface ProductProps {
   id: string;
   productName: string;
@@ -23,7 +24,6 @@ const ListProductByBusiness = ({
   shopId: string;
   page: number;
 }) => {
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   const [addingProductId, setAddingProductId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
@@ -59,7 +59,7 @@ const ListProductByBusiness = ({
                             width: "250px",
                             height: "250px",
                           }}
-                          src={`${imageUrl}${product.image}`}
+                          src={getMediaUrl(product.image)}
                           alt={`${product.productName}`}
                         />
                       </div>

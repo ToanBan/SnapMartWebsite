@@ -6,6 +6,7 @@ import Image from "next/image";
 import AlertSuccess from "@/app/components/share/AlertSuccess";
 import AlertError from "@/app/components/share/AlertError";
 import SendNotification from "@/app/api/users/SendNotification";
+import { getMediaUrl } from "@/lib/mediaUrl";
 interface Business {
   id: string;
   userId: string;
@@ -27,7 +28,6 @@ const VerifyBusiness = () => {
   const [success, setSucess] = useState(false);
   const [error, setError] = useState(false);
   const [condition, setCondition] = useState(false);
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
 
   useEffect(() => {
     if (typeof window !== "undefined" && selectedBusiness) {
@@ -338,7 +338,7 @@ const VerifyBusiness = () => {
                           style={{ height: "380px" }}
                         >
                           <Image
-                            src={`${imageUrl}${selectedBusiness.logo}`}
+                            src={getMediaUrl(selectedBusiness.logo)}
                             alt="avatar-profile"
                             width={250}
                             height={250}

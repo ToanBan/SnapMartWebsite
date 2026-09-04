@@ -21,7 +21,6 @@ const ProfilePage = async () => {
   const countFollow = await CountFollow();
   const cookieStore = cookies();
   const token = await (await cookieStore).get("token")?.value;
-  const imageUrl = `${process.env.NEXT_PUBLIC_API_URL}/uploads/`;
   let posts = [];
   let sharePosts = [];
   try {

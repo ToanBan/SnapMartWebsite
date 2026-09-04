@@ -2,13 +2,14 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const multer = require("multer");
+const { cloudinary } = require("./extensions/cloudinary");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const path = require("path");
 const { Server } = require("socket.io");
 const http = require("http");
 const jwt = require("jsonwebtoken");
 const app = express();
 const server = http.createServer(app);
-const fs = require("fs");
 require("dotenv").config();
 require("./schedule/autoSchedule");
 const { CheckUserAuthencation } = require("./middleware/checkAuthencation");
@@ -40,18 +41,11 @@ app.use(
   }),
 );
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-const uploadDir = path.join(__dirname, "uploads");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const ImageTime = Date.now();
-    cb(null, ImageTime + "-" + file.originalname);
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "snapmart",
+    resource_type: "auto",
   },
 });
 
